@@ -1,1449 +1,1748 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Nutriverse — Build Your Nutrition Universe</title>
+<title>Nutri à Frente — Sistema Nutricional Premium</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@300;400;500;700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
+/* ════════════════════════════════════════════════════
+   NUTRI À FRENTE — ULTRA PREMIUM SYSTEM
+   Dark · Visual · Interactive · Premium Tools
+   ════════════════════════════════════════════════════ */
 
-/* ─── RESET & BASE ─────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
 :root {
-  --c: #00ffff;
-  --c2: rgba(0,255,255,0.12);
-  --c3: rgba(0,255,255,0.04);
-  --c-border: rgba(0,255,255,0.18);
-  --c-glow: rgba(0,255,255,0.25);
-  --purple: rgba(120,80,255,0.15);
-  --blue: rgba(30,100,255,0.1);
-  --bg: #050505;
-  --bg2: #0a0a0f;
-  --surface: rgba(255,255,255,0.03);
-  --surface2: rgba(255,255,255,0.055);
-  --border: rgba(255,255,255,0.07);
-  --border2: rgba(255,255,255,0.12);
-  --text: #f0f2f5;
-  --muted: #5a6070;
-  --muted2: #8891a4;
+  /* Core accent - vibrant green for nutrition */
+  --g:      #00ff87;
+  --g2:     rgba(0,255,135,0.12);
+  --g3:     rgba(0,255,135,0.04);
+  --g-glow: rgba(0,255,135,0.28);
+  --g-border: rgba(0,255,135,0.18);
+
+  /* Secondary accents */
+  --amber:  #ffb800;
+  --rose:   #ff4f7b;
+  --violet: #9b6dff;
+  --sky:    #00c8ff;
+
+  /* Backgrounds */
+  --bg:    #030608;
+  --bg2:   #070d12;
+  --bg3:   #0b1520;
+  --surf:  rgba(255,255,255,0.025);
+  --surf2: rgba(255,255,255,0.048);
+  --surf3: rgba(255,255,255,0.075);
+
+  /* Borders */
+  --b0: rgba(0,255,135,0.05);
+  --b1: rgba(0,255,135,0.13);
+  --b2: rgba(0,255,135,0.25);
+  --b3: rgba(255,255,255,0.08);
+
+  /* Text */
+  --t1: #eef4ff;
+  --t2: #7a8fa8;
+  --t3: #3d4e60;
+
+  /* Fonts */
   --ff-display: 'Clash Display', sans-serif;
-  --ff-body: 'Cabinet Grotesk', sans-serif;
-  --r: 14px;
+  --ff-body:    'Cabinet Grotesk', sans-serif;
+
+  /* Radius */
+  --r:  12px;
   --r2: 20px;
-  --r3: 28px;
+  --r3: 32px;
 }
 
 body {
   background: var(--bg);
-  color: var(--text);
+  color: var(--t1);
   font-family: var(--ff-body);
   font-size: 16px;
-  line-height: 1.6;
+  line-height: 1.65;
   overflow-x: hidden;
   cursor: none;
 }
 
-/* ─── CUSTOM CURSOR ────────────────────────────── */
-#cursor {
-  position: fixed;
-  width: 8px; height: 8px;
-  background: var(--c);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%,-50%);
-  transition: width .15s, height .15s, background .15s;
-  box-shadow: 0 0 12px var(--c);
-}
-#cursor-ring {
-  position: fixed;
-  width: 36px; height: 36px;
-  border: 1px solid rgba(0,255,255,0.4);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9998;
-  transform: translate(-50%,-50%);
-  transition: width .3s, height .3s, border-color .3s;
-}
-body:has(a:hover) #cursor, body:has(button:hover) #cursor { width: 14px; height: 14px; }
-body:has(a:hover) #cursor-ring, body:has(button:hover) #cursor-ring {
-  width: 50px; height: 50px;
-  border-color: rgba(0,255,255,0.6);
-}
+/* ─── CURSOR ─────────────────────────────────── */
+#cur { position:fixed; width:8px; height:8px; background:var(--g); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); box-shadow:0 0 14px var(--g); transition:width .15s,height .15s; }
+#cur-ring { position:fixed; width:38px; height:38px; border:1px solid rgba(0,255,135,0.4); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:all .3s cubic-bezier(0.25,0.46,0.45,0.94); }
+body:has(a:hover) #cur, body:has(button:hover) #cur { width:14px; height:14px; }
+body:has(a:hover) #cur-ring, body:has(button:hover) #cur-ring { width:52px; height:52px; border-color:rgba(0,255,135,0.65); }
 
-/* ─── MOUSE GLOW ───────────────────────────────── */
-#mouse-glow {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  transition: opacity 1.2s ease;
-}
-
-/* ─── NOISE TEXTURE ────────────────────────────── */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-  opacity: 0.025;
-  pointer-events: none;
-  z-index: 2;
-}
-
-/* ─── GRID BG ──────────────────────────────────── */
-.grid-layer {
-  position: fixed;
-  inset: 0;
+/* ─── BACKGROUND LAYERS ─────────────────────── */
+#mouse-glow { position:fixed; inset:0; pointer-events:none; z-index:1; transition:opacity 1.2s; }
+.grid-bg {
+  position:fixed; inset:0; pointer-events:none; z-index:0;
   background-image:
-    linear-gradient(rgba(0,255,255,0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,255,255,0.025) 1px, transparent 1px);
+    linear-gradient(rgba(0,255,135,0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,135,0.022) 1px, transparent 1px);
   background-size: 80px 80px;
-  pointer-events: none;
-  z-index: 0;
-  mask-image: radial-gradient(ellipse 70% 50% at 50% 0%, black 30%, transparent 100%);
+  mask-image: radial-gradient(ellipse 75% 55% at 50% 0%, black 20%, transparent 100%);
 }
-
-/* ─── AMBIENT ORBS ─────────────────────────────── */
-.orb {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-  filter: blur(120px);
+.noise-layer {
+  position:fixed; inset:0; pointer-events:none; z-index:2;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.022;
 }
-.orb-hero-c { width: 800px; height: 800px; background: radial-gradient(circle, rgba(0,200,255,0.07) 0%, transparent 70%); top: -300px; left: 50%; transform: translateX(-50%); }
-.orb-hero-p { width: 500px; height: 500px; background: radial-gradient(circle, rgba(100,60,255,0.06) 0%, transparent 70%); top: 100px; right: -200px; }
-.orb-features { width: 600px; height: 600px; background: radial-gradient(circle, rgba(0,180,255,0.05) 0%, transparent 70%); bottom: -200px; left: -200px; }
+.orb { position:absolute; border-radius:50%; pointer-events:none; filter:blur(110px); }
+.o1 { width:800px; height:800px; background:radial-gradient(circle, rgba(0,210,100,0.065) 0%, transparent 70%); top:-350px; left:50%; transform:translateX(-50%); }
+.o2 { width:450px; height:450px; background:radial-gradient(circle, rgba(155,109,255,0.055) 0%, transparent 70%); bottom:-150px; right:-150px; }
+.o3 { width:300px; height:300px; background:radial-gradient(circle, rgba(0,200,255,0.04) 0%, transparent 70%); top:45%; left:-100px; }
 
-/* ─── NAV ──────────────────────────────────────── */
+/* ─── ANIMATIONS ─────────────────────────────── */
+@keyframes fadeUp   { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:none; } }
+@keyframes fadeDown { from { opacity:0; transform:translateY(-16px); } to { opacity:1; transform:none; } }
+@keyframes blink    { 0%,100% { opacity:1; } 50% { opacity:.3; } }
+@keyframes pulse-g  { 0%,100% { box-shadow:0 0 0 0 var(--g-glow); } 50% { box-shadow:0 0 0 8px rgba(0,255,135,0); } }
+@keyframes spin     { to { transform:rotate(360deg); } }
+@keyframes shimmer  { 0% { background-position:-200% 0; } 100% { background-position:200% 0; } }
+@keyframes floatY   { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
+
+.reveal { opacity:0; transform:translateY(20px); transition:opacity .7s ease, transform .7s ease; }
+.reveal.vis { opacity:1; transform:none; }
+.d1 { transition-delay:.1s; } .d2 { transition-delay:.2s; } .d3 { transition-delay:.3s; } .d4 { transition-delay:.4s; }
+
+/* ─── NAV ────────────────────────────────────── */
 nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 200;
-  height: 68px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 clamp(1.5rem, 5vw, 4rem);
-  background: rgba(5,5,5,0.55);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border-bottom: 1px solid var(--border);
+  position:fixed; top:0; left:0; right:0; z-index:500;
+  height:64px; display:flex; align-items:center; justify-content:space-between;
+  padding:0 clamp(1rem,4vw,3.5rem);
+  background:rgba(3,6,8,0.72); backdrop-filter:blur(24px) saturate(180%);
+  border-bottom:1px solid var(--b0);
   animation: fadeDown .6s ease both;
 }
-
 .nav-logo {
-  font-family: var(--ff-display);
-  font-size: 1.35rem;
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  color: var(--text);
+  font-family:var(--ff-display); font-size:1.2rem; font-weight:700;
+  letter-spacing:-.03em; text-decoration:none; color:var(--t1);
+  display:flex; align-items:center; gap:10px;
 }
-.logo-mark {
-  width: 28px; height: 28px;
-  border-radius: 8px;
-  background: var(--c);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
+.logo-dot {
+  width:28px; height:28px; border-radius:8px;
+  background:linear-gradient(135deg, var(--g), #00d4a0);
+  display:flex; align-items:center; justify-content:center;
+  font-size:.6rem; font-weight:800; color:#030608;
+  box-shadow:0 0 18px rgba(0,255,135,0.35);
 }
-.logo-mark::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent);
+.nav-links { display:flex; gap:2rem; list-style:none; }
+.nav-links a { text-decoration:none; font-size:.83rem; font-weight:500; color:var(--t2); transition:color .2s; }
+.nav-links a:hover { color:var(--t1); }
+.nav-cta {
+  font-family:var(--ff-body); font-size:.83rem; font-weight:700;
+  color:#030608; background:var(--g); border:none; cursor:pointer;
+  padding:9px 22px; border-radius:10px; letter-spacing:.01em;
+  transition:box-shadow .25s, transform .2s;
 }
-.logo-mark-inner {
-  width: 10px; height: 10px;
-  border-radius: 3px;
-  background: #050505;
-}
-.logo-text em { color: var(--c); font-style: normal; }
+.nav-cta:hover { box-shadow:0 0 32px var(--g-glow); transform:translateY(-1px); }
 
-.nav-center {
-  display: flex;
-  gap: 2.5rem;
-  list-style: none;
-}
-.nav-center a {
-  text-decoration: none;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--muted2);
-  letter-spacing: 0.01em;
-  transition: color .2s;
-}
-.nav-center a:hover { color: var(--text); }
-
-.nav-right { display: flex; gap: 12px; align-items: center; }
-
-.btn-nav-ghost {
-  font-family: var(--ff-body);
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--muted2);
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 8px 16px;
-  border-radius: var(--r);
-  transition: color .2s, background .2s;
-}
-.btn-nav-ghost:hover { color: var(--text); background: var(--surface2); }
-
-.btn-nav-cta {
-  font-family: var(--ff-body);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #050505;
-  background: var(--c);
-  border: none;
-  cursor: pointer;
-  padding: 9px 20px;
-  border-radius: var(--r);
-  letter-spacing: 0.01em;
-  transition: box-shadow .25s, transform .2s, filter .2s;
-  box-shadow: 0 0 0 0 var(--c-glow);
-}
-.btn-nav-cta:hover {
-  box-shadow: 0 0 30px rgba(0,255,255,0.35);
-  transform: translateY(-1px);
-  filter: brightness(1.05);
-}
-
-/* ─── HERO ─────────────────────────────────────── */
+/* ─── HERO ───────────────────────────────────── */
 .hero {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 120px clamp(1.5rem, 6vw, 6rem) 100px;
-  overflow: hidden;
-  z-index: 3;
+  position:relative; min-height:100vh;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:110px clamp(1rem,5vw,5rem) 90px;
+  overflow:hidden; z-index:3;
 }
-
-.hero-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--c);
-  background: rgba(0,255,255,0.06);
-  border: 1px solid var(--c-border);
-  border-radius: 100px;
-  padding: 7px 18px;
-  margin-bottom: 2.5rem;
+.hero-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:.68rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--g); background:rgba(0,255,135,0.06); border:1px solid var(--g-border);
+  border-radius:100px; padding:7px 18px; margin-bottom:2.2rem;
   animation: fadeUp .8s .2s ease both;
 }
-.eyebrow-pulse {
-  width: 5px; height: 5px;
-  background: var(--c);
-  border-radius: 50%;
-  box-shadow: 0 0 8px var(--c);
-  animation: blink 2s ease-in-out infinite;
+.badge-dot { width:6px; height:6px; background:var(--g); border-radius:50%; box-shadow:0 0 8px var(--g); animation:blink 2s ease-in-out infinite; }
+.hero-title {
+  font-family:var(--ff-display); font-size:clamp(3rem,8.5vw,7.5rem);
+  font-weight:700; line-height:.92; letter-spacing:-.05em;
+  max-width:900px; animation:fadeUp .8s .35s ease both;
 }
-
-.hero-h1 {
-  font-family: var(--ff-display);
-  font-size: clamp(3.2rem, 8vw, 7.5rem);
-  font-weight: 700;
-  line-height: 0.95;
-  letter-spacing: -0.05em;
-  max-width: 880px;
-  animation: fadeUp .8s .35s ease both;
+.hero-title .plain { color:var(--t1); display:block; }
+.hero-title .grad {
+  display:block;
+  background:linear-gradient(110deg, #00ff87 0%, #00ffc8 35%, #00c8ff 65%, #9b6dff 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  filter:drop-shadow(0 0 50px rgba(0,255,135,0.3));
 }
-.hero-h1 .line-plain { color: var(--text); display: block; }
-.hero-h1 .line-grad {
-  display: block;
-  background: linear-gradient(100deg, #00ffff 0%, #60b0ff 45%, #b060ff 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  filter: drop-shadow(0 0 40px rgba(0,255,255,0.25));
-}
-
 .hero-sub {
-  margin-top: 1.8rem;
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  font-weight: 300;
-  color: var(--muted2);
-  max-width: 520px;
-  line-height: 1.75;
-  animation: fadeUp .8s .5s ease both;
+  margin-top:1.5rem; font-size:clamp(.95rem,2vw,1.15rem); font-weight:400;
+  color:var(--t2); max-width:540px; line-height:1.8;
+  animation:fadeUp .8s .5s ease both;
 }
-
-.hero-ctas {
-  margin-top: 3rem;
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  animation: fadeUp .8s .65s ease both;
+.hero-actions {
+  display:flex; gap:16px; flex-wrap:wrap; justify-content:center;
+  margin-top:2.5rem; animation:fadeUp .8s .65s ease both;
 }
-
 .btn-primary {
-  font-family: var(--ff-body);
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #050505;
-  background: var(--c);
-  border: none;
-  cursor: pointer;
-  padding: 15px 32px;
-  border-radius: 12px;
-  letter-spacing: 0.01em;
-  transition: box-shadow .3s, transform .2s, filter .2s;
-  box-shadow: 0 0 40px rgba(0,255,255,0.2), inset 0 1px 0 rgba(255,255,255,0.3);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  position: relative;
-  overflow: hidden;
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:var(--ff-body); font-size:.95rem; font-weight:700;
+  color:#030608; background:var(--g); border:none; cursor:pointer;
+  padding:14px 32px; border-radius:var(--r); text-decoration:none;
+  transition:box-shadow .25s, transform .2s;
+  box-shadow:0 0 0 0 var(--g-glow);
 }
-.btn-primary::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent 50%);
+.btn-primary:hover { box-shadow:0 0 40px var(--g-glow); transform:translateY(-2px); }
+.btn-ghost {
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:var(--ff-body); font-size:.95rem; font-weight:600;
+  color:var(--t1); background:var(--surf2); border:1px solid var(--b3);
+  cursor:pointer; padding:13px 28px; border-radius:var(--r); text-decoration:none;
+  transition:background .2s, border-color .2s, transform .2s;
 }
-.btn-primary:hover {
-  box-shadow: 0 0 70px rgba(0,255,255,0.45), inset 0 1px 0 rgba(255,255,255,0.3);
-  transform: translateY(-2px);
-  filter: brightness(1.06);
-}
-.btn-arrow { transition: transform .25s; }
-.btn-primary:hover .btn-arrow { transform: translateX(5px); }
+.btn-ghost:hover { background:var(--surf3); border-color:var(--b2); transform:translateY(-2px); }
 
-.btn-secondary {
-  font-family: var(--ff-body);
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--muted2);
-  background: transparent;
-  border: 1px solid var(--border2);
-  cursor: pointer;
-  padding: 15px 28px;
-  border-radius: 12px;
-  transition: border-color .25s, color .25s, background .25s;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+/* ─── HERO STATS ─────────────────────────────── */
+.hero-stats {
+  display:flex; gap:2.5rem; flex-wrap:wrap; justify-content:center;
+  margin-top:3.5rem; padding-top:3rem;
+  border-top:1px solid var(--b3);
+  animation:fadeUp .8s .8s ease both;
 }
-.btn-secondary:hover {
-  border-color: rgba(255,255,255,0.25);
-  color: var(--text);
-  background: var(--surface2);
-}
+.hstat { text-align:center; }
+.hstat-num { font-family:var(--ff-display); font-size:2rem; font-weight:700; color:var(--g); display:block; }
+.hstat-lbl { font-size:.78rem; color:var(--t2); letter-spacing:.05em; text-transform:uppercase; }
 
-/* play icon */
-.play-icon {
-  width: 18px; height: 18px;
-  border-radius: 50%;
-  border: 1px solid var(--muted);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.55rem;
-  padding-left: 1px;
-  transition: border-color .25s;
-}
-.btn-secondary:hover .play-icon { border-color: var(--text); }
-
-.hero-meta {
-  margin-top: 2rem;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  animation: fadeUp .8s .8s ease both;
-}
-.hero-avatars {
-  display: flex;
-  align-items: center;
-}
-.avatar {
-  width: 30px; height: 30px;
-  border-radius: 50%;
-  border: 2px solid var(--bg);
-  margin-left: -8px;
-  font-size: 0.7rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-}
-.avatar:first-child { margin-left: 0; }
-.av1 { background: linear-gradient(135deg, #00ffff, #0080ff); color: #050505; }
-.av2 { background: linear-gradient(135deg, #7040ff, #c060ff); color: #fff; }
-.av3 { background: linear-gradient(135deg, #ff6060, #ff9030); color: #fff; }
-.av4 { background: linear-gradient(135deg, #40ff80, #00ffcc); color: #050505; }
-.hero-meta-text { font-size: 0.8rem; color: var(--muted2); font-weight: 400; }
-.hero-meta-text strong { color: var(--text); font-weight: 600; }
-
-/* ─── HERO VISUAL ──────────────────────────────── */
-.hero-visual-wrap {
-  margin-top: 5rem;
-  width: 100%;
-  max-width: 1000px;
-  animation: fadeUp 1s .95s ease both;
-  position: relative;
-}
-.hero-visual-wrap::before {
-  content: '';
-  position: absolute;
-  bottom: -60px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 70%;
-  height: 100px;
-  background: radial-gradient(ellipse, rgba(0,255,255,0.1), transparent 70%);
-  pointer-events: none;
-}
-
-.dash-shell {
-  background: rgba(10,10,18,0.9);
-  border: 1px solid var(--border2);
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow:
-    0 0 0 1px rgba(0,255,255,0.06),
-    0 80px 160px -30px rgba(0,0,0,0.9),
-    0 0 120px -40px rgba(0,255,255,0.08);
-  backdrop-filter: blur(20px);
-}
-.dash-chrome {
-  display: flex;
-  align-items: center;
-  padding: 13px 18px;
-  gap: 8px;
-  background: rgba(255,255,255,0.025);
-  border-bottom: 1px solid var(--border);
-}
-.chrome-dot { width: 10px; height: 10px; border-radius: 50%; }
-.cd1 { background: #ff5f57; }
-.cd2 { background: #ffbe2e; }
-.cd3 { background: #28c840; }
-.chrome-bar {
-  flex: 1;
-  max-width: 280px;
-  margin: 0 auto;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border);
-  border-radius: 7px;
-  padding: 4px 14px;
-  font-size: 0.72rem;
-  color: var(--muted);
-  letter-spacing: 0.02em;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.chrome-lock { color: var(--c); font-size: 0.65rem; }
-
-.dash-inner {
-  display: grid;
-  grid-template-columns: 200px 1fr;
-}
-
-/* sidebar */
-.d-sidebar {
-  border-right: 1px solid var(--border);
-  padding: 1.25rem 0.75rem;
-  background: rgba(0,0,0,0.2);
-}
-.d-sidebar-label {
-  font-size: 0.63rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
-  padding: 0 10px;
-  margin: 14px 0 6px;
-}
-.d-sidebar-label:first-child { margin-top: 0; }
-.d-nav-item {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 8px 10px;
-  border-radius: 8px;
-  font-size: 0.78rem;
-  font-weight: 500;
-  color: var(--muted2);
-  margin-bottom: 2px;
-  cursor: pointer;
-  transition: background .2s, color .2s;
-}
-.d-nav-item:hover { background: var(--surface); color: var(--text); }
-.d-nav-item.active {
-  background: rgba(0,255,255,0.08);
-  color: var(--c);
-  border: 1px solid rgba(0,255,255,0.12);
-}
-.d-nav-icon { font-size: 0.85rem; width: 16px; text-align: center; opacity: 0.8; }
-
-/* main area */
-.d-main { padding: 1.25rem 1.5rem; }
-.d-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
-.d-header-title { font-family: var(--ff-display); font-size: 1rem; font-weight: 600; letter-spacing: -0.02em; }
-.d-header-right { display: flex; gap: 8px; }
-.d-tag {
-  font-size: 0.68rem;
-  font-weight: 600;
-  background: rgba(0,255,255,0.08);
-  border: 1px solid rgba(0,255,255,0.18);
-  color: var(--c);
-  padding: 4px 10px;
-  border-radius: 100px;
-}
-
-.d-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px; }
-.d-stat {
-  background: rgba(255,255,255,0.025);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px 14px;
-}
-.d-stat.glow { border-color: rgba(0,255,255,0.2); background: rgba(0,255,255,0.04); }
-.d-stat-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
-.d-stat-val { font-family: var(--ff-display); font-size: 1.45rem; font-weight: 700; letter-spacing: -0.03em; }
-.d-stat-val.cyan { color: var(--c); text-shadow: 0 0 24px rgba(0,255,255,0.4); }
-.d-stat-delta { font-size: 0.68rem; color: #3df0a0; margin-top: 2px; }
-
-.d-body { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.d-chart-card {
-  background: rgba(255,255,255,0.02);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 14px;
-}
-.d-card-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
-
-.bars { display: flex; align-items: flex-end; gap: 5px; height: 72px; }
-.b { flex: 1; border-radius: 4px 4px 0 0; background: rgba(0,255,255,0.12); }
-.b.hi { background: var(--c); box-shadow: 0 0 10px rgba(0,255,255,0.3); }
-
-.d-ai {
-  background: linear-gradient(135deg, rgba(0,255,255,0.06), rgba(80,50,200,0.06));
-  border: 1px solid rgba(0,255,255,0.18);
-  border-radius: 10px;
-  padding: 14px;
-}
-.d-ai-badge { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--c); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-.d-ai-text { font-size: 0.75rem; color: var(--muted2); line-height: 1.55; }
-.d-ai-text b { color: var(--text); font-weight: 600; }
-
-/* ─── STATS BAND ───────────────────────────────── */
-.stats-band {
-  position: relative;
-  z-index: 3;
-  background: var(--bg2);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  padding: 0;
-  overflow: hidden;
-}
-.stats-band::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(0,255,255,0.025) 50%, transparent 100%);
-}
-.stats-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-}
-.stat-item {
-  padding: 52px 2rem;
-  text-align: center;
-  border-right: 1px solid var(--border);
-  position: relative;
-  overflow: hidden;
-  transition: background .3s;
-}
-.stat-item:last-child { border-right: none; }
-.stat-item:hover { background: rgba(0,255,255,0.02); }
-.stat-item::before {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 50%; transform: translateX(-50%);
-  width: 0;
-  height: 1px;
-  background: var(--c);
-  transition: width .4s ease;
-}
-.stat-item:hover::before { width: 60%; }
-.stat-num {
-  font-family: var(--ff-display);
-  font-size: clamp(2.2rem, 4vw, 3.4rem);
-  font-weight: 700;
-  letter-spacing: -0.05em;
-  color: var(--c);
-  line-height: 1;
-  text-shadow: 0 0 50px rgba(0,255,255,0.3);
-  display: block;
-}
-.stat-lbl {
-  display: block;
-  font-size: 0.82rem;
-  font-weight: 400;
-  color: var(--muted2);
-  margin-top: 8px;
-  letter-spacing: 0.01em;
-}
-
-/* ─── FEATURES ─────────────────────────────────── */
-.features {
-  position: relative;
-  z-index: 3;
-  padding: 130px clamp(1.5rem, 6vw, 6rem);
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
+/* ─── SECTION COMMON ─────────────────────────── */
+section { position:relative; z-index:3; }
+.container { max-width:1180px; margin:0 auto; padding:0 clamp(1rem,4vw,3rem); }
+.sec-pad { padding:100px 0; }
 .section-eyebrow {
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--c);
-  margin-bottom: 1.25rem;
-  display: block;
+  display:inline-block; font-size:.68rem; font-weight:700; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--g); margin-bottom:1.2rem;
 }
 .section-h2 {
-  font-family: var(--ff-display);
-  font-size: clamp(2rem, 4.5vw, 3.5rem);
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  line-height: 1.05;
-  max-width: 560px;
-  margin-bottom: 1rem;
+  font-family:var(--ff-display); font-size:clamp(2rem,5vw,3.5rem);
+  font-weight:700; line-height:1.05; letter-spacing:-.04em; color:var(--t1);
+  margin-bottom:1.2rem; max-width:750px;
 }
-.section-sub {
-  font-size: 1rem;
-  font-weight: 300;
-  color: var(--muted2);
-  max-width: 460px;
-  line-height: 1.75;
-  margin-bottom: 4rem;
+.section-h2 em { color:var(--g); font-style:normal; }
+.section-sub { font-size:1rem; color:var(--t2); max-width:560px; line-height:1.75; }
+
+/* ─── DIVIDER ────────────────────────────────── */
+.divider {
+  height:1px; background:linear-gradient(90deg, transparent, var(--b2), transparent);
+  margin:80px 0;
 }
 
-.feat-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--border);
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  overflow: hidden;
+/* ─── CARDS ──────────────────────────────────── */
+.card-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:20px; }
+.card-grid-3 { grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); }
+.card {
+  background:var(--surf); border:1px solid var(--b3);
+  border-radius:var(--r2); padding:28px;
+  transition:border-color .25s, background .25s, transform .25s;
+  position:relative; overflow:hidden;
 }
-.feat-card {
-  background: var(--bg2);
-  padding: 2.75rem 2.25rem;
-  transition: background .3s;
-  position: relative;
-  overflow: hidden;
+.card::before {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg, rgba(0,255,135,0.03) 0%, transparent 60%);
+  opacity:0; transition:opacity .3s;
 }
-.feat-card:hover { background: rgba(12,12,22,1); }
-.feat-card::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--c), transparent);
-  transform: scaleX(0);
-  transition: transform .4s ease;
+.card:hover { border-color:var(--b2); background:var(--surf2); transform:translateY(-3px); }
+.card:hover::before { opacity:1; }
+.card-icon { font-size:2rem; margin-bottom:16px; display:block; }
+.card-title { font-family:var(--ff-display); font-size:1.05rem; font-weight:600; color:var(--t1); margin-bottom:8px; }
+.card-body { font-size:.88rem; color:var(--t2); line-height:1.7; }
+.card-tag {
+  display:inline-block; font-size:.65rem; font-weight:700; letter-spacing:.1em;
+  text-transform:uppercase; padding:4px 10px; border-radius:6px; margin-bottom:10px;
 }
-.feat-card:hover::after { transform: scaleX(1); }
+.tag-g { color:var(--g); background:rgba(0,255,135,0.1); border:1px solid rgba(0,255,135,0.2); }
+.tag-amber { color:var(--amber); background:rgba(255,184,0,0.1); border:1px solid rgba(255,184,0,0.2); }
+.tag-rose { color:var(--rose); background:rgba(255,79,123,0.1); border:1px solid rgba(255,79,123,0.2); }
+.tag-violet { color:var(--violet); background:rgba(155,109,255,0.1); border:1px solid rgba(155,109,255,0.2); }
+.tag-sky { color:var(--sky); background:rgba(0,200,255,0.1); border:1px solid rgba(0,200,255,0.2); }
 
-.feat-icon-wrap {
-  width: 48px; height: 48px;
-  border-radius: 12px;
-  background: rgba(0,255,255,0.06);
-  border: 1px solid var(--c-border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.15rem;
-  margin-bottom: 1.5rem;
-  transition: box-shadow .3s, background .3s;
+/* ─── HERO CARD ──────────────────────────────── */
+.hero-card {
+  background:var(--surf); border:1px solid var(--b2);
+  border-radius:var(--r3); padding:40px;
+  position:relative; overflow:hidden;
 }
-.feat-card:hover .feat-icon-wrap {
-  background: rgba(0,255,255,0.1);
-  box-shadow: 0 0 24px rgba(0,255,255,0.15);
+.hero-card-glow {
+  position:absolute; width:400px; height:400px; border-radius:50%;
+  filter:blur(100px); pointer-events:none;
 }
+.hcg-g { background:radial-gradient(circle, rgba(0,255,135,0.08) 0%, transparent 70%); top:-100px; right:-100px; }
+.hcg-v { background:radial-gradient(circle, rgba(155,109,255,0.06) 0%, transparent 70%); bottom:-100px; left:-100px; }
 
-.feat-h3 {
-  font-family: var(--ff-display);
-  font-size: 1.2rem;
-  font-weight: 600;
-  letter-spacing: -0.025em;
-  color: var(--text);
-  margin-bottom: 0.75rem;
+/* ═══ SEÇÃO 1: SACOLÃO — FEIRA DA NUTRICIONISTA ═══ */
+.feira-hero {
+  background:linear-gradient(135deg, rgba(0,255,135,0.04) 0%, rgba(0,200,255,0.02) 100%);
+  border:1px solid var(--b1); border-radius:var(--r3); padding:48px;
+  margin-bottom:60px; text-align:center; position:relative; overflow:hidden;
 }
-.feat-p { font-size: 0.875rem; color: var(--muted2); line-height: 1.7; font-weight: 300; }
-.feat-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--c);
-  text-decoration: none;
-  margin-top: 1.25rem;
-  letter-spacing: 0.02em;
-  opacity: 0;
-  transform: translateY(4px);
-  transition: opacity .25s, transform .25s;
+.feira-hero::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse 70% 50% at 50% 0%, rgba(0,255,135,0.06) 0%, transparent 70%);
 }
-.feat-card:hover .feat-link { opacity: 1; transform: translateY(0); }
-.feat-link-arr { transition: transform .2s; }
-.feat-link:hover .feat-link-arr { transform: translateX(4px); }
+.feira-hero h1 {
+  font-family:var(--ff-display); font-size:clamp(2rem,5vw,3.2rem);
+  font-weight:700; letter-spacing:-.04em; color:var(--t1); position:relative;
+}
+.feira-hero p { color:var(--t2); margin-top:12px; font-size:1rem; position:relative; }
 
-/* ─── HOW IT WORKS ─────────────────────────────── */
-.how {
-  position: relative;
-  z-index: 3;
-  padding: 120px clamp(1.5rem, 6vw, 6rem);
-  max-width: 1100px;
-  margin: 0 auto;
+/* Fruit/Veg Category Pills */
+.cat-pills { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:32px; }
+.cat-pill {
+  font-size:.75rem; font-weight:600; letter-spacing:.05em; text-transform:uppercase;
+  padding:8px 18px; border-radius:100px; border:1px solid var(--b3);
+  color:var(--t2); background:var(--surf); cursor:pointer;
+  transition:all .2s;
 }
-.how-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  align-items: center;
-}
-.how-steps { display: flex; flex-direction: column; gap: 0; }
+.cat-pill.active, .cat-pill:hover { color:var(--g); border-color:var(--g-border); background:var(--g2); }
 
-.how-step {
-  display: flex;
-  gap: 1.5rem;
-  align-items: flex-start;
-  padding: 1.75rem 0;
-  border-bottom: 1px solid var(--border);
-  position: relative;
-  cursor: pointer;
-  transition: padding-left .25s;
+/* Product Grid */
+.product-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:16px; }
+.product-card {
+  background:var(--surf); border:1px solid var(--b3); border-radius:var(--r2);
+  padding:22px; transition:all .25s; cursor:default;
+  position:relative; overflow:hidden;
 }
-.how-step:first-child { padding-top: 0; }
-.how-step:last-child { border-bottom: none; }
-.how-step:hover { padding-left: 8px; }
+.product-card:hover { border-color:var(--b2); background:var(--surf2); transform:translateY(-4px); }
+.prod-emoji { font-size:2.5rem; margin-bottom:12px; display:block; animation:floatY 3s ease-in-out infinite; }
+.prod-name { font-family:var(--ff-display); font-size:1rem; font-weight:600; color:var(--t1); margin-bottom:8px; }
+.prod-tip { font-size:.8rem; color:var(--t2); line-height:1.6; }
+.prod-season { display:inline-block; font-size:.65rem; font-weight:700; padding:3px 8px; border-radius:5px; margin-top:8px; }
+.season-boa { background:rgba(0,255,135,0.12); color:var(--g); }
+.season-ok  { background:rgba(255,184,0,0.12); color:var(--amber); }
 
-.step-num {
-  font-family: var(--ff-display);
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--muted);
-  letter-spacing: 0.08em;
-  min-width: 28px;
-  padding-top: 4px;
-  transition: color .25s;
+/* ─── TABELA CALÓRICA ────────────────────────── */
+.kcal-bar-wrap { display:flex; flex-direction:column; gap:10px; }
+.kcal-row { display:flex; align-items:center; gap:14px; }
+.kcal-emoji { font-size:1.4rem; width:36px; text-align:center; flex-shrink:0; }
+.kcal-name { font-size:.85rem; font-weight:600; color:var(--t1); width:130px; flex-shrink:0; }
+.kcal-bar-bg { flex:1; height:8px; background:var(--surf3); border-radius:100px; overflow:hidden; }
+.kcal-bar-fill {
+  height:100%; border-radius:100px;
+  background:linear-gradient(90deg, var(--g), #00c8ff);
+  transition:width 1.2s cubic-bezier(0.16,1,0.3,1);
+  width:0;
 }
-.how-step:hover .step-num { color: var(--c); }
-.step-content {}
-.step-title {
-  font-family: var(--ff-display);
-  font-size: 1.05rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  color: var(--text);
-  margin-bottom: 4px;
-}
-.step-desc { font-size: 0.85rem; color: var(--muted2); font-weight: 300; line-height: 1.65; }
+.kcal-val { font-size:.78rem; font-weight:700; color:var(--g); width:55px; text-align:right; flex-shrink:0; }
 
-.how-visual {
-  background: rgba(10,10,20,0.8);
-  border: 1px solid var(--border2);
-  border-radius: 20px;
-  overflow: hidden;
-  aspect-ratio: 4/3;
-  position: relative;
-  box-shadow: 0 40px 80px -20px rgba(0,0,0,0.7), 0 0 60px -20px rgba(0,255,255,0.06);
+/* ─── VERDURAS & LEGUMES ─────────────────────── */
+.vl-tabs { display:flex; gap:8px; margin-bottom:28px; }
+.vl-tab {
+  font-size:.78rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+  padding:10px 22px; border-radius:10px; border:1px solid var(--b3);
+  color:var(--t2); background:transparent; cursor:pointer; transition:all .2s;
 }
-.how-visual-inner {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  gap: 1rem;
+.vl-tab.active { color:#030608; background:var(--g); border-color:var(--g); }
+.vl-panel { display:none; }
+.vl-panel.active { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px,1fr)); gap:14px; }
+.vl-item {
+  background:var(--surf); border:1px solid var(--b3); border-radius:var(--r);
+  padding:18px; transition:all .2s;
 }
-.how-circle {
-  width: 160px; height: 160px;
-  border-radius: 50%;
-  border: 1px solid rgba(0,255,255,0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  animation: spin 12s linear infinite;
+.vl-item:hover { border-color:var(--b2); background:var(--surf2); }
+.vl-icon { font-size:1.8rem; margin-bottom:8px; display:block; }
+.vl-name { font-size:.88rem; font-weight:700; color:var(--t1); margin-bottom:4px; }
+.vl-tip { font-size:.77rem; color:var(--t2); line-height:1.6; }
+
+/* ─── HIGIENIZAÇÃO ───────────────────────────── */
+.steps-row { display:flex; gap:0; position:relative; }
+.steps-row::before {
+  content:''; position:absolute; top:28px; left:44px; right:44px; height:1px;
+  background:linear-gradient(90deg, var(--g), var(--sky));
 }
-.how-circle::before {
-  content: '';
-  position: absolute;
-  width: 8px; height: 8px;
-  background: var(--c);
-  border-radius: 50%;
-  top: -4px; left: 50%; transform: translateX(-50%);
-  box-shadow: 0 0 14px var(--c);
+.step-item { flex:1; text-align:center; position:relative; z-index:1; }
+.step-num-circle {
+  width:56px; height:56px; border-radius:50%;
+  background:linear-gradient(135deg, var(--g), #00c8ff);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--ff-display); font-size:1.1rem; font-weight:700; color:#030608;
+  margin:0 auto 14px; box-shadow:0 0 24px var(--g-glow);
 }
-.how-circle-inner {
-  width: 100px; height: 100px;
-  border-radius: 50%;
-  border: 1px solid rgba(100,80,255,0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: spin 8s linear infinite reverse;
+.step-label { font-size:.8rem; font-weight:600; color:var(--t1); }
+.step-desc { font-size:.73rem; color:var(--t2); margin-top:4px; line-height:1.5; }
+
+/* ─── ARMAZENAMENTO ──────────────────────────── */
+.storage-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.storage-card {
+  background:var(--surf); border:1px solid var(--b3); border-radius:var(--r2);
+  padding:28px; position:relative; overflow:hidden;
 }
-.how-circle-inner::before {
-  content: '';
-  position: absolute;
-  width: 6px; height: 6px;
-  background: rgba(120,80,255,0.8);
-  border-radius: 50%;
-  bottom: -3px; left: 50%; transform: translateX(-50%);
-  box-shadow: 0 0 10px rgba(120,80,255,0.6);
+.storage-card.good { border-color:rgba(0,255,135,0.2); }
+.storage-card.bad  { border-color:rgba(255,79,123,0.2); }
+.storage-icon { font-size:2rem; margin-bottom:12px; display:block; }
+.storage-title { font-family:var(--ff-display); font-size:1rem; font-weight:600; margin-bottom:12px; }
+.storage-card.good .storage-title { color:var(--g); }
+.storage-card.bad  .storage-title { color:var(--rose); }
+.storage-list { list-style:none; display:flex; flex-direction:column; gap:6px; }
+.storage-list li { font-size:.82rem; color:var(--t2); display:flex; align-items:center; gap:8px; }
+.storage-list li::before { content:'→'; color:var(--t3); flex-shrink:0; }
+
+/* ═══ SEÇÃO 2: GUIA DE VIAGEM ═══ */
+.viagem-hero {
+  background:linear-gradient(135deg, rgba(155,109,255,0.06) 0%, rgba(0,200,255,0.04) 100%);
+  border:1px solid rgba(155,109,255,0.2); border-radius:var(--r3); padding:48px;
+  margin-bottom:60px; text-align:center; position:relative; overflow:hidden;
 }
-.how-circle-core {
-  width: 50px; height: 50px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(0,255,255,0.3), rgba(0,100,200,0.1));
-  border: 1px solid rgba(0,255,255,0.3);
-  box-shadow: 0 0 30px rgba(0,255,255,0.15);
-  font-size: 1.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.viagem-hero::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse 70% 50% at 50% 0%, rgba(155,109,255,0.06) 0%, transparent 70%);
 }
 
-.how-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
-.htag {
-  font-size: 0.72rem;
-  font-weight: 500;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--muted2);
-  padding: 5px 12px;
-  border-radius: 100px;
+/* Strategy cards */
+.saboteur-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:16px; }
+.saboteur-card {
+  background:var(--surf); border:1px solid var(--b3); border-radius:var(--r2);
+  padding:24px; display:flex; gap:16px; transition:all .25s;
 }
-.htag.active { background: rgba(0,255,255,0.07); border-color: var(--c-border); color: var(--c); }
+.saboteur-card:hover { border-color:rgba(155,109,255,0.3); transform:translateY(-3px); }
+.saboteur-num {
+  font-family:var(--ff-display); font-size:2.5rem; font-weight:700;
+  color:rgba(155,109,255,0.2); line-height:1; flex-shrink:0; width:40px;
+}
+.saboteur-content {}
+.saboteur-title { font-size:.9rem; font-weight:700; color:var(--t1); margin-bottom:6px; }
+.saboteur-desc { font-size:.8rem; color:var(--t2); line-height:1.65; }
 
-/* ─── FINAL CTA ────────────────────────────────── */
-.final-cta {
-  position: relative;
-  z-index: 3;
-  padding: 100px clamp(1.5rem, 6vw, 6rem) 120px;
-  text-align: center;
-  overflow: hidden;
+/* Fome diferenciação */
+.fome-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+.fome-card {
+  border-radius:var(--r2); padding:28px;
+  position:relative; overflow:hidden;
 }
-.cta-glow-bg {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(0,255,255,0.05), transparent 70%);
-  pointer-events: none;
-}
+.fome-fome    { background:rgba(0,255,135,0.06); border:1px solid rgba(0,255,135,0.2); }
+.fome-vontade { background:rgba(0,200,255,0.06); border:1px solid rgba(0,200,255,0.2); }
+.fome-vz      { background:rgba(255,184,0,0.06); border:1px solid rgba(255,184,0,0.2); }
+.fome-vzona   { background:rgba(255,79,123,0.06); border:1px solid rgba(255,79,123,0.2); }
+.fome-title { font-family:var(--ff-display); font-size:1.1rem; font-weight:700; margin-bottom:8px; }
+.fome-fome    .fome-title { color:var(--g); }
+.fome-vontade .fome-title { color:var(--sky); }
+.fome-vz      .fome-title { color:var(--amber); }
+.fome-vzona   .fome-title { color:var(--rose); }
+.fome-desc { font-size:.83rem; color:var(--t2); line-height:1.7; }
 
-.cta-box {
-  position: relative;
-  max-width: 760px;
-  margin: 0 auto;
-  background: rgba(10,10,20,0.8);
-  border: 1px solid rgba(0,255,255,0.2);
-  border-radius: 28px;
-  padding: 5rem 4rem;
-  backdrop-filter: blur(20px);
-  overflow: hidden;
+/* Aeroporto / Destinos */
+.destino-accordion {}
+.destino-item {
+  border:1px solid var(--b3); border-radius:var(--r2);
+  margin-bottom:10px; overflow:hidden; transition:border-color .25s;
 }
-.cta-box::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 10%; right: 10%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--c), transparent);
+.destino-item.open { border-color:var(--b2); }
+.destino-header {
+  padding:20px 24px; display:flex; align-items:center; gap:14px;
+  cursor:pointer; transition:background .2s;
+  background:var(--surf);
 }
-.cta-box::after {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: 28px;
-  background: linear-gradient(135deg, rgba(0,255,255,0.06), transparent 40%, rgba(100,80,200,0.04));
-  pointer-events: none;
+.destino-header:hover { background:var(--surf2); }
+.destino-flag { font-size:1.6rem; }
+.destino-name { font-family:var(--ff-display); font-size:1rem; font-weight:600; color:var(--t1); flex:1; }
+.destino-arrow { color:var(--t3); transition:transform .3s; font-size:.9rem; }
+.destino-item.open .destino-arrow { transform:rotate(180deg); color:var(--g); }
+.destino-body {
+  max-height:0; overflow:hidden; transition:max-height .4s ease, padding .3s;
+  padding:0 24px; background:rgba(0,0,0,0.15);
 }
+.destino-item.open .destino-body { max-height:400px; padding:20px 24px 24px; }
+.destino-snacks { display:flex; flex-wrap:wrap; gap:10px; }
+.destino-snack {
+  display:flex; align-items:center; gap:8px;
+  background:var(--surf2); border:1px solid var(--b3);
+  border-radius:10px; padding:10px 14px; font-size:.82rem; color:var(--t1);
+}
+.destino-snack em { color:var(--g); font-style:normal; font-weight:600; }
 
-.cta-box h2 {
-  font-family: var(--ff-display);
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  line-height: 1.05;
-  color: var(--text);
-  margin-bottom: 1rem;
+/* Bolsa packing list */
+.pack-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px,1fr)); gap:14px; }
+.pack-item {
+  background:var(--surf); border:1px solid var(--b3); border-radius:var(--r);
+  padding:20px; text-align:center; transition:all .25s; cursor:pointer;
+  position:relative;
 }
-.cta-box p {
-  font-size: 1rem;
-  color: var(--muted2);
-  font-weight: 300;
-  max-width: 440px;
-  margin: 0 auto 2.5rem;
-  line-height: 1.75;
+.pack-item.checked { border-color:var(--g-border); background:var(--g2); }
+.pack-item.checked .pack-icon { filter:grayscale(0); }
+.pack-check {
+  position:absolute; top:10px; right:10px; width:18px; height:18px;
+  border-radius:50%; border:1.5px solid var(--b3);
+  display:flex; align-items:center; justify-content:center;
+  font-size:.6rem; transition:all .2s;
 }
-.cta-note {
-  margin-top: 1.5rem;
-  font-size: 0.75rem;
-  color: var(--muted);
-  letter-spacing: 0.02em;
-}
-.cta-note span { color: var(--muted2); }
+.pack-item.checked .pack-check { background:var(--g); border-color:var(--g); color:#030608; }
+.pack-icon { font-size:2rem; margin-bottom:8px; display:block; }
+.pack-label { font-size:.78rem; font-weight:600; color:var(--t1); }
+.pack-detail { font-size:.7rem; color:var(--t2); margin-top:3px; }
 
-/* ─── FOOTER ───────────────────────────────────── */
+/* ═══ FERRAMENTAS ═══ */
+.tools-section { background:var(--bg2); }
+.tool-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(320px,1fr)); gap:24px; }
+.tool-card {
+  background:var(--surf); border:1px solid var(--b3); border-radius:var(--r2);
+  padding:32px; position:relative; overflow:hidden; transition:all .25s;
+}
+.tool-card:hover { border-color:var(--b2); transform:translateY(-4px); }
+.tool-card-glow {
+  position:absolute; width:300px; height:300px; border-radius:50%;
+  filter:blur(80px); pointer-events:none; opacity:.5;
+}
+.tool-header { display:flex; align-items:flex-start; gap:16px; margin-bottom:20px; }
+.tool-icon-box {
+  width:52px; height:52px; border-radius:14px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:1.5rem;
+}
+.ti-g  { background:rgba(0,255,135,0.12); border:1px solid rgba(0,255,135,0.2); }
+.ti-v  { background:rgba(155,109,255,0.12); border:1px solid rgba(155,109,255,0.2); }
+.ti-a  { background:rgba(255,184,0,0.12); border:1px solid rgba(255,184,0,0.2); }
+.ti-r  { background:rgba(255,79,123,0.12); border:1px solid rgba(255,79,123,0.2); }
+.tool-name { font-family:var(--ff-display); font-size:1.1rem; font-weight:700; color:var(--t1); }
+.tool-desc { font-size:.82rem; color:var(--t2); margin-top:4px; line-height:1.6; }
+
+/* Prato builder */
+.prato-builder { display:flex; flex-direction:column; gap:12px; }
+.prato-row { display:flex; align-items:center; gap:12px; }
+.prato-label { font-size:.82rem; color:var(--t2); width:100px; flex-shrink:0; }
+.prato-bar-bg { flex:1; height:12px; background:var(--surf3); border-radius:100px; overflow:hidden; cursor:pointer; position:relative; }
+.prato-bar-fill { height:100%; border-radius:100px; transition:width .3s; }
+.prato-pct { font-size:.8rem; font-weight:700; width:38px; text-align:right; flex-shrink:0; }
+
+/* Escala da fome interativa */
+.hunger-scale { display:flex; gap:6px; align-items:stretch; }
+.hunger-btn {
+  flex:1; min-height:60px; border-radius:10px; border:1px solid var(--b3);
+  background:var(--surf); cursor:pointer; font-family:var(--ff-display);
+  font-size:1rem; font-weight:700; color:var(--t2);
+  transition:all .2s; display:flex; align-items:center; justify-content:center;
+}
+.hunger-btn:hover, .hunger-btn.active { color:#030608; transform:scaleY(1.05); }
+.hunger-result {
+  margin-top:14px; padding:16px; border-radius:var(--r);
+  background:var(--surf2); border:1px solid var(--b3);
+  font-size:.85rem; color:var(--t2); min-height:64px;
+  transition:all .3s;
+}
+.hunger-result.show { border-color:var(--b2); }
+
+/* PDF Generator */
+.pdf-form { display:flex; flex-direction:column; gap:14px; }
+.pdf-input {
+  background:var(--surf); border:1px solid var(--b3); border-radius:var(--r);
+  padding:12px 16px; color:var(--t1); font-family:var(--ff-body); font-size:.88rem;
+  outline:none; transition:border-color .2s;
+}
+.pdf-input:focus { border-color:var(--g-border); }
+.pdf-input::placeholder { color:var(--t3); }
+.pdf-select { background:var(--surf); border:1px solid var(--b3); border-radius:var(--r); padding:12px 16px; color:var(--t1); font-family:var(--ff-body); font-size:.88rem; outline:none; transition:border-color .2s; cursor:pointer; }
+.pdf-select:focus { border-color:var(--g-border); }
+.pdf-btn {
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  font-family:var(--ff-body); font-size:.88rem; font-weight:700;
+  padding:13px 20px; border-radius:var(--r); border:none; cursor:pointer;
+  transition:all .25s;
+}
+.pdf-btn-primary { background:var(--g); color:#030608; }
+.pdf-btn-primary:hover { box-shadow:0 0 24px var(--g-glow); transform:translateY(-1px); }
+.pdf-btn-secondary { background:var(--surf2); color:var(--t1); border:1px solid var(--b3); }
+.pdf-btn-secondary:hover { background:var(--surf3); border-color:var(--b2); }
+
+/* Regra da Mão */
+.mao-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+.mao-card {
+  background:var(--surf); border:1px solid var(--b3); border-radius:var(--r);
+  padding:18px; text-align:center; transition:all .2s;
+}
+.mao-card:hover { border-color:var(--b2); }
+.mao-hand { font-size:2.2rem; margin-bottom:8px; }
+.mao-food { font-size:.78rem; font-weight:700; color:var(--t1); }
+.mao-amount { font-size:.7rem; color:var(--t2); margin-top:3px; }
+
+/* ─── STATS BAND ─────────────────────────────── */
+.stats-band {
+  background:var(--bg2); border-top:1px solid var(--b3); border-bottom:1px solid var(--b3);
+  padding:50px 0;
+}
+.stats-inner { max-width:1180px; margin:0 auto; padding:0 clamp(1rem,4vw,3rem); display:flex; gap:0; justify-content:space-around; flex-wrap:wrap; }
+.stat-item { text-align:center; padding:20px; }
+.stat-num { font-family:var(--ff-display); font-size:2.8rem; font-weight:700; color:var(--g); display:block; letter-spacing:-.04em; }
+.stat-lbl { font-size:.78rem; color:var(--t2); letter-spacing:.06em; text-transform:uppercase; }
+
+/* ─── FOOTER ─────────────────────────────────── */
 footer {
-  position: relative;
-  z-index: 3;
-  border-top: 1px solid var(--border);
-  padding: 60px clamp(1.5rem, 6vw, 6rem) 40px;
-  max-width: 1200px;
-  margin: 0 auto;
+  background:var(--bg); border-top:1px solid var(--b3);
+  padding:60px clamp(1rem,4vw,3rem) 40px;
+  max-width:1180px; margin:0 auto;
+}
+.footer-top { display:flex; gap:60px; flex-wrap:wrap; margin-bottom:50px; }
+.footer-brand { flex:2; min-width:220px; }
+.footer-brand-name { font-family:var(--ff-display); font-size:1.4rem; font-weight:700; letter-spacing:-.04em; color:var(--t1); margin-bottom:8px; }
+.footer-brand-name em { color:var(--g); font-style:normal; }
+.footer-brand-desc { font-size:.85rem; color:var(--t2); line-height:1.7; max-width:280px; }
+.footer-col { flex:1; min-width:150px; }
+.footer-col-h { font-size:.7rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--t3); margin-bottom:14px; }
+.footer-col ul { list-style:none; display:flex; flex-direction:column; gap:10px; }
+.footer-col a { text-decoration:none; font-size:.85rem; color:var(--t2); transition:color .2s; }
+.footer-col a:hover { color:var(--t1); }
+.footer-bottom { display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--b3); padding-top:24px; flex-wrap:wrap; gap:16px; }
+.footer-copy { font-size:.78rem; color:var(--t3); }
+.footer-links-bottom { display:flex; gap:20px; }
+.footer-links-bottom a { font-size:.78rem; color:var(--t3); text-decoration:none; transition:color .2s; }
+.footer-links-bottom a:hover { color:var(--t2); }
+
+/* ─── RESPONSIVE ─────────────────────────────── */
+@media (max-width:768px) {
+  .nav-links { display:none; }
+  .steps-row { flex-direction:column; gap:20px; }
+  .steps-row::before { display:none; }
+  .storage-grid { grid-template-columns:1fr; }
+  .fome-grid { grid-template-columns:1fr; }
+  .mao-grid { grid-template-columns:repeat(2,1fr); }
+  .hero-stats { gap:1.5rem; }
+  .footer-top { gap:32px; }
 }
 
-.footer-top {
-  display: grid;
-  grid-template-columns: 1.8fr repeat(3, 1fr);
-  gap: 3rem;
-  padding-bottom: 3rem;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 2rem;
+/* Toast */
+.toast {
+  position:fixed; bottom:24px; right:24px; z-index:1000;
+  background:var(--g); color:#030608;
+  padding:14px 24px; border-radius:12px;
+  font-size:.85rem; font-weight:700;
+  transform:translateY(80px); opacity:0; pointer-events:none;
+  transition:all .35s cubic-bezier(0.16,1,0.3,1);
+  box-shadow:0 8px 40px var(--g-glow);
 }
+.toast.show { transform:translateY(0); opacity:1; }
 
-.footer-brand {}
-.footer-brand-name {
-  font-family: var(--ff-display);
-  font-size: 1.2rem;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  display: flex; align-items: center; gap: 8px;
-  margin-bottom: 0.6rem;
-}
-.footer-brand-name em { color: var(--c); font-style: normal; }
-.footer-brand-desc {
-  font-size: 0.82rem;
-  color: var(--muted);
-  font-weight: 300;
-  line-height: 1.65;
-  max-width: 220px;
-}
-
-.footer-col-h {
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--text);
-  margin-bottom: 1rem;
-}
-.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
-.footer-col ul a {
-  font-size: 0.83rem;
-  color: var(--muted);
-  font-weight: 300;
-  text-decoration: none;
-  transition: color .2s;
-}
-.footer-col ul a:hover { color: var(--text); }
-
-.footer-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-.footer-copy { font-size: 0.78rem; color: var(--muted); font-weight: 300; }
-
-.footer-socials { display: flex; gap: 8px; }
-.soc-btn {
-  width: 34px; height: 34px;
-  border-radius: 8px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.8rem;
-  color: var(--muted2);
-  text-decoration: none;
-  transition: background .2s, border-color .2s, color .2s;
-}
-.soc-btn:hover { background: var(--c2); border-color: var(--c-border); color: var(--c); }
-
-/* ─── ANIMATIONS ───────────────────────────────── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes fadeDown {
-  from { opacity: 0; transform: translateY(-18px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes blink {
-  0%,100% { opacity:1; } 50% { opacity:.3; }
-}
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-/* scroll reveal */
-.reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity .7s ease, transform .7s ease;
-}
-.reveal.vis { opacity: 1; transform: translateY(0); }
-.d1 { transition-delay:.1s; }
-.d2 { transition-delay:.2s; }
-.d3 { transition-delay:.3s; }
-.d4 { transition-delay:.4s; }
-
-/* float animation */
-@keyframes floatY {
-  0%,100% { transform: translateY(0px); }
-  50% { transform: translateY(-14px); }
-}
-.hero-visual-wrap { animation: fadeUp 1s .95s ease both, floatY 7s 2.5s ease-in-out infinite; }
-
-/* ─── RESPONSIVE ───────────────────────────────── */
-@media (max-width: 960px) {
-  .dash-inner { grid-template-columns: 1fr; }
-  .d-sidebar { display: none; }
-  .d-stats { grid-template-columns: repeat(2,1fr); }
-  .feat-grid { grid-template-columns: 1fr; }
-  .how-grid { grid-template-columns: 1fr; }
-  .how-visual { display: none; }
-  .stats-inner { grid-template-columns: repeat(2,1fr); }
-  .stat-item { border-right: none; border-bottom: 1px solid var(--border); }
-  .stat-item:last-child { border-bottom: none; }
-  .footer-top { grid-template-columns: 1fr 1fr; }
-  .nav-center { display: none; }
-}
-@media (max-width: 600px) {
-  .hero-ctas { flex-direction: column; width: 100%; }
-  .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
-  .cta-box { padding: 3rem 1.75rem; }
-  .d-body { grid-template-columns: 1fr; }
-  body { cursor: auto; }
-  #cursor, #cursor-ring { display: none; }
+/* Shimmer loading state */
+.shimmer {
+  background:linear-gradient(90deg, var(--surf) 25%, var(--surf2) 50%, var(--surf) 75%);
+  background-size:200% 100%;
+  animation:shimmer 1.5s infinite;
 }
 </style>
 </head>
 <body>
 
-<!-- mouse glow element -->
+<!-- Background -->
 <div id="mouse-glow"></div>
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
+<div class="grid-bg"></div>
+<div class="noise-layer"></div>
+<div id="cur"></div>
+<div id="cur-ring"></div>
+<div class="toast" id="toast"></div>
 
-<div class="grid-layer"></div>
-
-<!-- ── NAV ── -->
+<!-- ══════════════════════════════════════════
+     NAV
+     ══════════════════════════════════════════ -->
 <nav>
   <a href="#" class="nav-logo">
-    <div class="logo-mark"><div class="logo-mark-inner"></div></div>
-    <span class="logo-text">Nutri<em>verse</em></span>
+    <div class="logo-dot">N</div>
+    <span>Nutri<em style="color:var(--g);font-style:normal">àFrente</em></span>
   </a>
-  <ul class="nav-center">
-    <li><a href="#features">Features</a></li>
-    <li><a href="#how">How it works</a></li>
-    <li><a href="#stats">Platform</a></li>
-    <li><a href="#pricing">Pricing</a></li>
+  <ul class="nav-links">
+    <li><a href="#sacolao">Sacolão</a></li>
+    <li><a href="#viagem">Viagem</a></li>
+    <li><a href="#ferramentas">Ferramentas</a></li>
+    <li><a href="#sobre">Sobre</a></li>
   </ul>
-  <div class="nav-right">
-    <button class="btn-nav-ghost">Sign in</button>
-    <button class="btn-nav-cta">Get early access</button>
-  </div>
+  <button class="nav-cta" onclick="scrollTo({top:document.getElementById('ferramentas').offsetTop-80,behavior:'smooth'})">Ferramentas →</button>
 </nav>
 
-<!-- ── HERO ── -->
+<!-- ══════════════════════════════════════════
+     HERO
+     ══════════════════════════════════════════ -->
 <section class="hero">
-  <div class="orb orb-hero-c"></div>
-  <div class="orb orb-hero-p"></div>
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+  <div class="orb o3"></div>
 
-  <div class="hero-eyebrow">
-    <div class="eyebrow-pulse"></div>
-    Now in private beta — 2,400+ nutritionists
-  </div>
+  <div class="hero-badge"><div class="badge-dot"></div>Sistema Nutricional Premium · 2025</div>
 
-  <h1 class="hero-h1">
-    <span class="line-plain">Build your</span>
-    <span class="line-grad">nutrition universe</span>
+  <h1 class="hero-title">
+    <span class="plain">Nutrição com</span>
+    <span class="grad">ciência e estilo</span>
   </h1>
 
   <p class="hero-sub">
-    A platform where nutritionists create their own streaming experience — AI-powered plans, metabolic insights, client portals and more.
+    Dois guias completos — feira saudável e viagem sem culpa — com ferramentas interativas para transformar seu conhecimento em resultados reais.
   </p>
 
-  <div class="hero-ctas">
-    <a href="#" class="btn-primary">
-      Start your universe
-      <span class="btn-arrow">→</span>
-    </a>
-    <a href="#" class="btn-secondary">
-      <span class="play-icon">▶</span>
-      Watch demo
-    </a>
+  <div class="hero-actions">
+    <a href="#sacolao" class="btn-primary">🛒 Guia da Feira <span>→</span></a>
+    <a href="#viagem" class="btn-ghost">✈️ Guia de Viagem</a>
   </div>
 
-  <div class="hero-meta">
-    <div class="hero-avatars">
-      <div class="avatar av1">AK</div>
-      <div class="avatar av2">ML</div>
-      <div class="avatar av3">JP</div>
-      <div class="avatar av4">SR</div>
-    </div>
-    <div class="hero-meta-text">
-      Trusted by <strong>2,400+ nutritionists</strong> worldwide
-    </div>
-  </div>
-
-  <!-- Dashboard mockup -->
-  <div class="hero-visual-wrap">
-    <div class="dash-shell">
-      <div class="dash-chrome">
-        <div class="chrome-dot cd1"></div>
-        <div class="chrome-dot cd2"></div>
-        <div class="chrome-dot cd3"></div>
-        <div class="chrome-bar">
-          <span class="chrome-lock">🔒</span>
-          app.nutriverse.io
-        </div>
-      </div>
-      <div class="dash-inner">
-        <div class="d-sidebar">
-          <div class="d-sidebar-label">Workspace</div>
-          <div class="d-nav-item active"><span class="d-nav-icon">⬡</span> Overview</div>
-          <div class="d-nav-item"><span class="d-nav-icon">◎</span> Clients</div>
-          <div class="d-nav-item"><span class="d-nav-icon">◈</span> Meal Plans</div>
-          <div class="d-sidebar-label">Insights</div>
-          <div class="d-nav-item"><span class="d-nav-icon">◇</span> Analytics</div>
-          <div class="d-nav-item"><span class="d-nav-icon">◆</span> AI Engine</div>
-          <div class="d-nav-item"><span class="d-nav-icon">▣</span> Protocols</div>
-        </div>
-        <div class="d-main">
-          <div class="d-header">
-            <div class="d-header-title">Good morning, Dr. Silva 👋</div>
-            <div class="d-header-right">
-              <span class="d-tag">✦ AI Active</span>
-            </div>
-          </div>
-          <div class="d-stats">
-            <div class="d-stat glow">
-              <div class="d-stat-label">Active Clients</div>
-              <div class="d-stat-val cyan">148</div>
-              <div class="d-stat-delta">↑ 12% this month</div>
-            </div>
-            <div class="d-stat">
-              <div class="d-stat-label">Plans Generated</div>
-              <div class="d-stat-val">3,241</div>
-              <div class="d-stat-delta">↑ 34 today</div>
-            </div>
-            <div class="d-stat">
-              <div class="d-stat-label">Avg. Adherence</div>
-              <div class="d-stat-val">94%</div>
-              <div class="d-stat-delta">↑ 6% vs last wk</div>
-            </div>
-            <div class="d-stat">
-              <div class="d-stat-label">Revenue MTD</div>
-              <div class="d-stat-val">$12.4k</div>
-              <div class="d-stat-delta">↑ 18% vs prev</div>
-            </div>
-          </div>
-          <div class="d-body">
-            <div class="d-chart-card">
-              <div class="d-card-label">Weekly caloric adherence</div>
-              <div class="bars">
-                <div class="b" style="height:50%"></div>
-                <div class="b" style="height:64%"></div>
-                <div class="b" style="height:72%"></div>
-                <div class="b" style="height:60%"></div>
-                <div class="b" style="height:82%"></div>
-                <div class="b hi" style="height:96%"></div>
-                <div class="b" style="height:88%"></div>
-                <div class="b" style="height:78%"></div>
-                <div class="b" style="height:85%"></div>
-                <div class="b hi" style="height:100%"></div>
-                <div class="b" style="height:92%"></div>
-                <div class="b" style="height:80%"></div>
-              </div>
-            </div>
-            <div class="d-ai">
-              <div class="d-ai-badge">✦ AI Insight</div>
-              <div class="d-ai-text">
-                <b>Maya R.</b> shows consistent protein under-target on weekends. Adjusting Saturday plan with higher-satiety sources. Predicted <b>+14% adherence</b>.
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="hero-stats">
+    <div class="hstat"><span class="hstat-num">27+</span><span class="hstat-lbl">Frutas guiadas</span></div>
+    <div class="hstat"><span class="hstat-num">25+</span><span class="hstat-lbl">Verduras & legumes</span></div>
+    <div class="hstat"><span class="hstat-num">26</span><span class="hstat-lbl">Destinos brasileiros</span></div>
+    <div class="hstat"><span class="hstat-num">4</span><span class="hstat-lbl">Ferramentas práticas</span></div>
   </div>
 </section>
 
-<!-- ── STATS BAND ── -->
-<div class="stats-band" id="stats">
+<!-- ══════════════════════════════════════════
+     SEÇÃO 1 — SACOLÃO / FEIRA
+     ══════════════════════════════════════════ -->
+<section id="sacolao" class="sec-pad">
+  <div class="container">
+
+    <div class="feira-hero reveal">
+      <div style="position:relative;">
+        <div class="section-eyebrow">🛒 Olhos de Nutri na Feira</div>
+        <h1 style="font-family:var(--ff-display);font-size:clamp(2rem,5vw,3.2rem);font-weight:700;letter-spacing:-.04em;color:var(--t1);">Nunca mais leve frutas e verduras <em style="color:var(--g);font-style:normal">erradas</em> para casa</h1>
+        <p style="color:var(--t2);margin-top:14px;font-size:1rem;max-width:580px;margin-left:auto;margin-right:auto;line-height:1.75;">Dicas de nutricionista para escolher, higienizar e armazenar seus alimentos com confiança — aproveitando sabor, nutrientes e economia.</p>
+      </div>
+    </div>
+
+    <!-- Onde comprar -->
+    <div class="reveal">
+      <div class="section-eyebrow">✦ Onde comprar</div>
+      <h2 class="section-h2">Prefira a <em>feira livre</em></h2>
+    </div>
+    <div class="card-grid reveal d1" style="margin-bottom:60px;">
+      <div class="card">
+        <span class="card-icon">🏪</span>
+        <div class="card-title">Na feira</div>
+        <div class="card-body">Produtos mais frescos, de qualidade, geralmente mais baratos e incentivam a agricultura familiar. Priorize sempre que possível.</div>
+        <div class="card-tag tag-g" style="margin-top:12px;">Recomendado</div>
+      </div>
+      <div class="card">
+        <span class="card-icon">🛒</span>
+        <div class="card-title">No supermercado</div>
+        <div class="card-body">Se não tiver feira, fique de olho nos dias em que frutas e verduras chegam. Produtos picados perdem nutrientes e duram menos — evite.</div>
+        <div class="card-tag tag-amber" style="margin-top:12px;">Segunda opção</div>
+      </div>
+      <div class="card">
+        <span class="card-icon">📅</span>
+        <div class="card-title">Safra certa</div>
+        <div class="card-body">Comprar na época certa garante fruta mais saborosa, nutritiva e barata. Sempre verifique a sazonalidade antes de escolher.</div>
+        <div class="card-tag tag-sky" style="margin-top:12px;">Dica de ouro</div>
+      </div>
+    </div>
+
+    <!-- FRUTAS -->
+    <div class="reveal">
+      <div class="section-eyebrow">🍎 Frutas</div>
+      <h2 class="section-h2">Como escolher as <em>melhores</em></h2>
+      <p class="section-sub" style="margin-bottom:32px;">Consuma 2 a 3 tipos por dia: fibras, vitaminas, minerais e água na medida certa.</p>
+    </div>
+
+    <div class="cat-pills reveal d1">
+      <button class="cat-pill active" onclick="filterFrutas('all',this)">Todas</button>
+      <button class="cat-pill" onclick="filterFrutas('toque',this)">🤚 Pelo toque</button>
+      <button class="cat-pill" onclick="filterFrutas('cor',this)">🎨 Pela cor</button>
+      <button class="cat-pill" onclick="filterFrutas('peso',this)">⚖️ Pelo peso</button>
+      <button class="cat-pill" onclick="filterFrutas('aroma',this)">👃 Pelo aroma</button>
+    </div>
+
+    <div class="product-grid reveal d2" id="fruta-grid">
+      <!-- Cards gerados por JS -->
+    </div>
+
+    <!-- Tabela calórica -->
+    <div class="divider reveal"></div>
+    <div class="reveal">
+      <div class="section-eyebrow">📊 Ranking calórico</div>
+      <h2 class="section-h2">Frutas por <em>energia</em> (kcal/100g)</h2>
+      <p class="section-sub" style="margin-bottom:32px;">Da mais levinha para a mais calórica — todas têm seu papel na dieta.</p>
+    </div>
+    <div class="hero-card reveal d1">
+      <div class="hero-card-glow hcg-g"></div>
+      <div class="kcal-bar-wrap" id="kcal-bars" style="position:relative;">
+        <!-- gerado por JS -->
+      </div>
+    </div>
+
+    <!-- VERDURAS & LEGUMES -->
+    <div class="divider reveal"></div>
+    <div class="reveal">
+      <div class="section-eyebrow">🥦 Verduras & Legumes</div>
+      <h2 class="section-h2">Como escolher <em>frescos</em></h2>
+    </div>
+
+    <div class="vl-tabs reveal d1">
+      <button class="vl-tab active" onclick="showVL('verduras',this)">🥬 Verduras</button>
+      <button class="vl-tab" onclick="showVL('legumes',this)">🥕 Legumes</button>
+    </div>
+
+    <div class="vl-panel active reveal d2" id="vl-verduras"></div>
+    <div class="vl-panel reveal d2" id="vl-legumes"></div>
+
+    <!-- HIGIENIZAÇÃO -->
+    <div class="divider reveal"></div>
+    <div class="reveal">
+      <div class="section-eyebrow">🧼 Higienização</div>
+      <h2 class="section-h2">Não guarde direto na <em>geladeira</em></h2>
+      <p class="section-sub" style="margin-bottom:40px;">Bactérias e agrotóxicos ficam na casca. Higienize sempre antes de armazenar.</p>
+    </div>
+
+    <div class="steps-row reveal d1">
+      <div class="step-item">
+        <div class="step-num-circle">1</div>
+        <div class="step-label">Molho</div>
+        <div class="step-desc">1L de água + 1 col. sopa de hipoclorito de sódio <em>ou</em> 1 col. café de água sanitária</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num-circle">2</div>
+        <div class="step-label">Aguardar</div>
+        <div class="step-desc">Mínimo 15 minutos em repouso completo</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num-circle">3</div>
+        <div class="step-label">Enxaguar</div>
+        <div class="step-desc">Água corrente abundante — casca incluída</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num-circle">4</div>
+        <div class="step-label">Secar</div>
+        <div class="step-desc">Seque muito bem antes de guardar — folhas murcham em horas se úmidas</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num-circle">5</div>
+        <div class="step-label">Armazenar</div>
+        <div class="step-desc">Potes com papel-toalha entre camadas absorvem umidade residual</div>
+      </div>
+    </div>
+
+    <!-- ARMAZENAMENTO -->
+    <div class="divider reveal"></div>
+    <div class="reveal">
+      <div class="section-eyebrow">🧊 Armazenamento</div>
+      <h2 class="section-h2">Geladeira ou <em>temperatura ambiente?</em></h2>
+    </div>
+
+    <div class="storage-grid reveal d1" style="margin-bottom:60px;">
+      <div class="storage-card good">
+        <span class="storage-icon">🌡️</span>
+        <div class="storage-title">✅ Temperatura ambiente</div>
+        <ul class="storage-list">
+          <li>Laranja, limão, mexerica</li>
+          <li>Manga, abacate, mamão</li>
+          <li>Cebola, batata, mandioca</li>
+          <li>Gengibre, rabanete</li>
+          <li>Banana (nunca geladeira)</li>
+        </ul>
+      </div>
+      <div class="storage-card good">
+        <span class="storage-icon">❄️</span>
+        <div class="storage-title">✅ Geladeira (após higienizar)</div>
+        <ul class="storage-list">
+          <li>Tomate (prolonga vida)</li>
+          <li>Folhas verdes com papel-toalha</li>
+          <li>Morango, uva, kiwi</li>
+          <li>Cenoura, beterraba</li>
+          <li>Ervas frescas (maço em água)</li>
+        </ul>
+      </div>
+      <div class="storage-card bad">
+        <span class="storage-icon">⚠️</span>
+        <div class="storage-title">❌ Erros comuns</div>
+        <ul class="storage-list">
+          <li>Guardar sem higienizar</li>
+          <li>Folhas úmidas na geladeira</li>
+          <li>Banana na geladeira (escurece)</li>
+          <li>Tomate cortado sem tampa</li>
+          <li>Frutas e legumes misturados</li>
+        </ul>
+      </div>
+      <div class="storage-card good">
+        <span class="storage-icon">🥶</span>
+        <div class="storage-title">✅ Congelamento (verduras)</div>
+        <ul class="storage-list">
+          <li>Branqueamento: 2 min água fervente</li>
+          <li>Choque térmico em água gelada</li>
+          <li>Secar bem antes de congelar</li>
+          <li>Potes de vidro ou sacos próprios</li>
+          <li>Duram o mês todo sem perder cor</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- STATS BAND -->
+<div class="stats-band">
   <div class="stats-inner">
-    <div class="stat-item reveal">
-      <span class="stat-num">148k+</span>
-      <span class="stat-lbl">Meal plans generated</span>
-    </div>
-    <div class="stat-item reveal d1">
-      <span class="stat-num">2,400+</span>
-      <span class="stat-lbl">Nutritionists onboard</span>
-    </div>
-    <div class="stat-item reveal d2">
-      <span class="stat-num">94%</span>
-      <span class="stat-lbl">Average client adherence</span>
-    </div>
-    <div class="stat-item reveal d3">
-      <span class="stat-num">4.9★</span>
-      <span class="stat-lbl">Practitioner rating</span>
-    </div>
+    <div class="stat-item reveal"><span class="stat-num">2–3</span><span class="stat-lbl">Frutas por dia</span></div>
+    <div class="stat-item reveal d1"><span class="stat-num">15min</span><span class="stat-lbl">De higienização</span></div>
+    <div class="stat-item reveal d2"><span class="stat-num">100%</span><span class="stat-lbl">Natural & sem desperdício</span></div>
+    <div class="stat-item reveal d3"><span class="stat-num">+Saúde</span><span class="stat-lbl">Para toda a família</span></div>
   </div>
 </div>
 
-<!-- ── FEATURES ── -->
-<section class="features" id="features">
-  <div class="orb orb-features" style="position:absolute;"></div>
-  <span class="section-eyebrow reveal">✦ Platform</span>
-  <h2 class="section-h2 reveal d1">Built for the future of nutrition</h2>
-  <p class="section-sub reveal d2">Everything you need to run a modern, AI-powered nutrition practice. Six tools replaced by one.</p>
+<!-- ══════════════════════════════════════════
+     SEÇÃO 2 — GUIA DE VIAGEM
+     ══════════════════════════════════════════ -->
+<section id="viagem" class="sec-pad" style="background:var(--bg2);">
+  <div class="container">
 
-  <div class="feat-grid">
-    <div class="feat-card reveal">
-      <div class="feat-icon-wrap">✦</div>
-      <h3 class="feat-h3">AI Meal Engine</h3>
-      <p class="feat-p">Generate personalized, evidence-based meal plans in seconds. Macros, micros, allergies, lifestyle — all adapted in real time.</p>
-      <a href="#" class="feat-link">Explore engine <span class="feat-link-arr">→</span></a>
+    <div class="viagem-hero reveal">
+      <div style="position:relative;">
+        <div class="section-eyebrow" style="color:var(--violet);">✈️ Guia de Viagem Nutricional</div>
+        <h1 style="font-family:var(--ff-display);font-size:clamp(2rem,5vw,3.2rem);font-weight:700;letter-spacing:-.04em;color:var(--t1);">Para não sair da dieta <em style="color:var(--violet);font-style:normal">mesmo curtindo a vida</em></h1>
+        <p style="color:var(--t2);margin-top:14px;font-size:1rem;max-width:560px;margin-left:auto;margin-right:auto;line-height:1.75;">Viajar não engorda. O que engorda são as escolhas sem estratégia. Aqui está o seu manual completo.</p>
+      </div>
     </div>
-    <div class="feat-card reveal d1">
-      <div class="feat-icon-wrap">◎</div>
-      <h3 class="feat-h3">Metabolic Analytics</h3>
-      <p class="feat-p">Deep biomarker tracking and predictive metabolic models that surface insights before your clients even notice them.</p>
-      <a href="#" class="feat-link">View analytics <span class="feat-link-arr">→</span></a>
+
+    <!-- Sabotadores -->
+    <div class="reveal">
+      <div class="section-eyebrow" style="color:var(--violet);">⚡ Os 6 sabotadores</div>
+      <h2 class="section-h2">O que impede seu <em style="color:var(--violet);">emagrecimento</em> nas viagens</h2>
     </div>
-    <div class="feat-card reveal d2">
-      <div class="feat-icon-wrap">◈</div>
-      <h3 class="feat-h3">Client Portal</h3>
-      <p class="feat-p">A premium, white-labeled app for your clients. Meal logging, progress tracking, direct messaging — beautifully designed.</p>
-      <a href="#" class="feat-link">See portal <span class="feat-link-arr">→</span></a>
+
+    <div class="saboteur-grid reveal d1" style="margin-bottom:60px;">
+      <div class="saboteur-card">
+        <div class="saboteur-num">01</div>
+        <div class="saboteur-content">
+          <div class="saboteur-title">Falta de planejamento</div>
+          <div class="saboteur-desc">Você viaja sem pensar nas refeições e acaba comendo por impulso em todas as paradas.</div>
+        </div>
+      </div>
+      <div class="saboteur-card">
+        <div class="saboteur-num">02</div>
+        <div class="saboteur-content">
+          <div class="saboteur-title">Mentalidade de "pausa"</div>
+          <div class="saboteur-desc">A viagem vira desculpa para comer sem limites, todos os dias, em todas as refeições.</div>
+        </div>
+      </div>
+      <div class="saboteur-card">
+        <div class="saboteur-num">03</div>
+        <div class="saboteur-content">
+          <div class="saboteur-title">Fome emocional</div>
+          <div class="saboteur-desc">Mais ansiedade = mais vontade de comer, mesmo sem fome real. Mudança de rotina aciona gatilhos.</div>
+        </div>
+      </div>
+      <div class="saboteur-card">
+        <div class="saboteur-num">04</div>
+        <div class="saboteur-content">
+          <div class="saboteur-title">Depender 100% dos outros</div>
+          <div class="saboteur-desc">Sem lanches na bolsa, você chega faminta nos restaurantes e perde o controle total.</div>
+        </div>
+      </div>
+      <div class="saboteur-card">
+        <div class="saboteur-num">05</div>
+        <div class="saboteur-content">
+          <div class="saboteur-title">Tudo vira "merecimento"</div>
+          <div class="saboteur-desc">Quando cada refeição é especial, tudo vira excesso. Equilíbrio é a chave.</div>
+        </div>
+      </div>
+      <div class="saboteur-card">
+        <div class="saboteur-num">06</div>
+        <div class="saboteur-content">
+          <div class="saboteur-title">Pouca proteína e água</div>
+          <div class="saboteur-desc">Pouca proteína = mais fome. Pouca água = retenção, inchaço e vontade de beliscar sem parar.</div>
+        </div>
+      </div>
     </div>
+
+    <!-- Fome vs Vontade -->
+    <div class="divider reveal"></div>
+    <div class="reveal">
+      <div class="section-eyebrow" style="color:var(--sky);">🧠 Consciência alimentar</div>
+      <h2 class="section-h2">Fome ou <em style="color:var(--sky);">vontade</em> de comer?</h2>
+      <p class="section-sub" style="margin-bottom:32px;">Entender essa diferença muda tudo. Aprenda a identificar o sinal certo antes de comer.</p>
+    </div>
+
+    <div class="fome-grid reveal d1" style="margin-bottom:60px;">
+      <div class="fome-card fome-fome">
+        <div class="fome-title">🍽️ Fome Real</div>
+        <div class="fome-desc">Não é específica — você comeria qualquer coisa saudável, inclusive uma maçã. Sinal físico genuíno do corpo. <strong style="color:var(--g);">Hora de comer!</strong></div>
+      </div>
+      <div class="fome-card fome-vontade">
+        <div class="fome-title">💭 Vontade</div>
+        <div class="fome-desc">Específica, mas não urgente. Traz lembranças afetivas — conforto, alegria, prazer. Pode ser satisfeita com porções controladas.</div>
+      </div>
+      <div class="fome-card fome-vz">
+        <div class="fome-title">👀 Vontadezinha</div>
+        <div class="fome-desc">Social — você só sente vontade quando vê o alimento. Ligue o alerta: é gatilho visual, não fome física.</div>
+      </div>
+      <div class="fome-card fome-vzona">
+        <div class="fome-title">🚨 Vontadezona</div>
+        <div class="fome-desc">Ligada a compulsão. Abre a geladeira a cada 5 minutos. Quando percebe, já comeu tudo. Busque apoio profissional.</div>
+      </div>
+    </div>
+
+    <!-- Hospedagem -->
+    <div class="divider reveal"></div>
+    <div class="reveal">
+      <div class="section-eyebrow" style="color:var(--amber);">🏨 Antes de viajar</div>
+      <h2 class="section-h2">Escolha a <em style="color:var(--amber);">hospedagem certa</em></h2>
+    </div>
+
+    <div class="hero-card reveal d1" style="border-color:rgba(255,184,0,0.15);margin-bottom:40px;">
+      <div class="hero-card-glow" style="background:radial-gradient(circle, rgba(255,184,0,0.06) 0%, transparent 70%);top:-100px;right:-100px;"></div>
+      <div style="position:relative;">
+        <div style="font-family:var(--ff-display);font-size:1.2rem;font-weight:700;color:var(--amber);margin-bottom:20px;">🏠 Prefira locais com cozinha</div>
+        <div class="card-grid-3" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px;">
+          <div style="background:rgba(255,184,0,0.05);border:1px solid rgba(255,184,0,0.15);border-radius:var(--r);padding:16px;font-size:.82rem;color:var(--t2);">☀️ Preparar café da manhã simples e leve</div>
+          <div style="background:rgba(255,184,0,0.05);border:1px solid rgba(255,184,0,0.15);border-radius:var(--r);padding:16px;font-size:.82rem;color:var(--t2);">🥡 Fazer lanches práticos antes de sair</div>
+          <div style="background:rgba(255,184,0,0.05);border:1px solid rgba(255,184,0,0.15);border-radius:var(--r);padding:16px;font-size:.82rem;color:var(--t2);">💰 Economizar e evitar comer por desespero</div>
+          <div style="background:rgba(255,184,0,0.05);border:1px solid rgba(255,184,0,0.15);border-radius:var(--r);padding:16px;font-size:.82rem;color:var(--t2);">🎯 Ajustar alimentação ao seu objetivo</div>
+          <div style="background:rgba(255,184,0,0.05);border:1px solid rgba(255,184,0,0.15);border-radius:var(--r);padding:16px;font-size:.82rem;color:var(--t2);">🌿 Opções mais leves nos dias turísticos</div>
+        </div>
+        <div style="background:rgba(255,184,0,0.08);border:1px solid rgba(255,184,0,0.2);border-radius:var(--r);padding:16px;font-size:.88rem;color:var(--amber);">⭐ <strong>Regra de ouro:</strong> Café da manhã leve na hospedagem + almoço e jantar mais flexíveis na rua.</div>
+      </div>
+    </div>
+
+    <!-- Destinos brasileiros -->
+    <div class="reveal">
+      <div class="section-eyebrow" style="color:var(--rose);">🗺️ Destinos brasileiros</div>
+      <h2 class="section-h2">Lanches <em style="color:var(--rose);">locais inteligentes</em></h2>
+      <p class="section-sub" style="margin-bottom:32px;">Aproveite a cultura local sem abandonar seus objetivos. Clique para expandir cada destino.</p>
+    </div>
+
+    <div class="destino-accordion reveal d1" id="destino-accordion"></div>
+
+    <!-- O que levar na bolsa -->
+    <div class="divider reveal"></div>
+    <div class="reveal">
+      <div class="section-eyebrow" style="color:var(--g);">👜 O que levar na bolsa</div>
+      <h2 class="section-h2">Checklist de <em>sobrevivência</em> nutricional</h2>
+      <p class="section-sub" style="margin-bottom:32px;">Clique nos itens para marcar o que você já separou!</p>
+    </div>
+
+    <div class="pack-grid reveal d1" id="pack-grid"></div>
+
+    <!-- Regra da Mão -->
+    <div class="divider reveal"></div>
+    <div class="reveal">
+      <div class="section-eyebrow" style="color:var(--violet);">✋ Regra da mão</div>
+      <h2 class="section-h2">Monte seu prato em <em style="color:var(--violet);">qualquer lugar</em></h2>
+    </div>
+
+    <div class="mao-grid reveal d1" style="margin-bottom:60px;">
+      <div class="mao-card">
+        <div class="mao-hand">🤚</div>
+        <div class="mao-food" style="color:var(--rose);">1 Palma</div>
+        <div class="mao-amount">Proteína</div>
+        <div class="mao-amount" style="margin-top:4px;font-size:.68rem;">Carne, frango, peixe ou ovos</div>
+      </div>
+      <div class="mao-card">
+        <div class="mao-hand">✊</div>
+        <div class="mao-food" style="color:var(--amber);">1 Punho</div>
+        <div class="mao-amount">Carboidrato</div>
+        <div class="mao-amount" style="margin-top:4px;font-size:.68rem;">Arroz, massa, purê</div>
+      </div>
+      <div class="mao-card">
+        <div class="mao-hand">🙌</div>
+        <div class="mao-food" style="color:var(--g);">2 Conchas</div>
+        <div class="mao-amount">Vegetais</div>
+        <div class="mao-amount" style="margin-top:4px;font-size:.68rem;">Crus e cozidos</div>
+      </div>
+      <div class="mao-card">
+        <div class="mao-hand">👍</div>
+        <div class="mao-food" style="color:var(--sky);">1 Polegar</div>
+        <div class="mao-amount">Gordura</div>
+        <div class="mao-amount" style="margin-top:4px;font-size:.68rem;">Azeite, abacate, castanhas</div>
+      </div>
+    </div>
+
+    <!-- Café do hotel -->
+    <div class="reveal">
+      <div class="section-eyebrow" style="color:var(--sky);">☕ No café do hotel</div>
+      <h2 class="section-h2">Escolhas inteligentes no <em style="color:var(--sky);">buffet</em></h2>
+    </div>
+
+    <div class="card-grid reveal d1" style="margin-bottom:20px;">
+      <div class="card"><span class="card-icon">✅</span><div class="card-title">Ovos mexidos com pão</div><div class="card-body">Proteína + carboidrato — combo perfeito para começar o dia sem fome antes do almoço.</div></div>
+      <div class="card"><span class="card-icon">✅</span><div class="card-title">Salada de frutas</div><div class="card-body">Fibras, vitaminas e hidratação. Prefira sem adição de açúcar ou leite condensado.</div></div>
+      <div class="card"><span class="card-icon">✅</span><div class="card-title">Iogurte natural + frutas</div><div class="card-body">Probióticos + fibras. Evite os versões adoçados — leia o rótulo se houver.</div></div>
+      <div class="card"><span class="card-icon">✅</span><div class="card-title">Tapioca de frango</div><div class="card-body">Carboidrato leve + proteína magra. Combinação prática e nutritiva.</div></div>
+      <div class="card"><span class="card-icon">❌</span><div class="card-title">Evite: bolos e pães doces</div><div class="card-body">Alto índice glicêmico — você vai sentir fome muito antes do almoço.</div><div class="card-tag tag-rose" style="margin-top:10px;">Cuidado</div></div>
+      <div class="card"><span class="card-icon">❌</span><div class="card-title">Evite: sucos industriais</div><div class="card-body">Açúcar elevado sem fibras. Prefira água, café sem açúcar ou água de coco natural.</div><div class="card-tag tag-rose" style="margin-top:10px;">Cuidado</div></div>
+    </div>
+
   </div>
 </section>
 
-<!-- ── HOW IT WORKS ── -->
-<section class="how" id="how">
-  <span class="section-eyebrow reveal">✦ Process</span>
-  <h2 class="section-h2 reveal d1">From intake to outcome, automated</h2>
-  <p class="section-sub reveal d2">A seamless workflow built around how elite practitioners actually work.</p>
+<!-- STATS BAND 2 -->
+<div class="stats-band">
+  <div class="stats-inner">
+    <div class="stat-item reveal"><span class="stat-num">26</span><span class="stat-lbl">Estados com lanches guiados</span></div>
+    <div class="stat-item reveal d1"><span class="stat-num">100%</span><span class="stat-lbl">Sem culpa</span></div>
+    <div class="stat-item reveal d2"><span class="stat-num">∞</span><span class="stat-lbl">Viagens com estratégia</span></div>
+    <div class="stat-item reveal d3"><span class="stat-num">+Saúde</span><span class="stat-lbl">Sem abrir mão da vida</span></div>
+  </div>
+</div>
 
-  <div class="how-grid">
-    <div class="how-steps">
-      <div class="how-step reveal">
-        <div class="step-num">01</div>
-        <div class="step-content">
-          <div class="step-title">Onboard your client</div>
-          <div class="step-desc">Smart intake forms capture goals, health history, lifestyle, and preferences — pre-analyzed by AI before your first session.</div>
-        </div>
-      </div>
-      <div class="how-step reveal d1">
-        <div class="step-num">02</div>
-        <div class="step-content">
-          <div class="step-title">Generate the plan</div>
-          <div class="step-desc">Our nutrition LLM builds a fully personalized plan in seconds. Edit, refine, or approve with one click.</div>
-        </div>
-      </div>
-      <div class="how-step reveal d2">
-        <div class="step-num">03</div>
-        <div class="step-content">
-          <div class="step-title">Monitor & adapt</div>
-          <div class="step-desc">Real-time adherence tracking and AI-powered alerts surface issues early, so you can intervene before they compound.</div>
-        </div>
-      </div>
-      <div class="how-step reveal d3">
-        <div class="step-num">04</div>
-        <div class="step-content">
-          <div class="step-title">Scale your practice</div>
-          <div class="step-desc">Protocol automation, billing, notes, and reporting — handled. Focus entirely on your clients.</div>
-        </div>
-      </div>
+<!-- ══════════════════════════════════════════
+     FERRAMENTAS
+     ══════════════════════════════════════════ -->
+<section id="ferramentas" class="sec-pad tools-section">
+  <div class="container">
+
+    <div class="reveal" style="text-align:center;margin-bottom:60px;">
+      <div class="section-eyebrow">⚡ Ferramentas</div>
+      <h2 class="section-h2" style="margin:0 auto;text-align:center;max-width:600px;">Ferramentas <em>práticas</em> para usar agora</h2>
+      <p class="section-sub" style="margin:12px auto 0;text-align:center;">Interativas, funcionais e com download em PDF — projetadas para uso real, não só leitura.</p>
     </div>
 
-    <div class="how-visual reveal d2">
-      <div class="how-visual-inner">
-        <div class="how-circle">
-          <div class="how-circle-inner">
-            <div class="how-circle-core">⬡</div>
+    <div class="tool-grid">
+
+      <!-- FERRAMENTA 1: ESCALA DA FOME -->
+      <div class="tool-card reveal">
+        <div class="tool-card-glow" style="background:radial-gradient(circle,rgba(0,255,135,0.06) 0%,transparent 70%);top:-100px;left:-50px;"></div>
+        <div style="position:relative;">
+          <div class="tool-header">
+            <div class="tool-icon-box ti-g">🔢</div>
+            <div>
+              <div class="tool-name">Escala da Fome</div>
+              <div class="tool-desc">Clique no número e descubra o que seu corpo está sentindo</div>
+            </div>
+          </div>
+          <div class="hunger-scale" id="hunger-scale">
+            <!-- gerado por JS -->
+          </div>
+          <div class="hunger-result" id="hunger-result">Clique em um número acima para identificar seu nível de fome</div>
+        </div>
+      </div>
+
+      <!-- FERRAMENTA 2: CONSTRUTOR DE PRATO -->
+      <div class="tool-card reveal d1">
+        <div class="tool-card-glow" style="background:radial-gradient(circle,rgba(0,200,255,0.06) 0%,transparent 70%);top:-100px;right:-50px;"></div>
+        <div style="position:relative;">
+          <div class="tool-header">
+            <div class="tool-icon-box ti-v">🍽️</div>
+            <div>
+              <div class="tool-name">Construtor de Prato</div>
+              <div class="tool-desc">Visualize a distribuição ideal dos grupos alimentares</div>
+            </div>
+          </div>
+          <div class="prato-builder" id="prato-builder">
+            <!-- gerado por JS -->
+          </div>
+          <div style="margin-top:16px;padding:12px;background:var(--surf2);border-radius:var(--r);font-size:.8rem;color:var(--t2);" id="prato-feedback">Ajuste os controles para montar seu prato ideal</div>
+        </div>
+      </div>
+
+      <!-- FERRAMENTA 3: GERADOR DE LISTA DE FEIRA PDF -->
+      <div class="tool-card reveal d2">
+        <div class="tool-card-glow" style="background:radial-gradient(circle,rgba(255,184,0,0.06) 0%,transparent 70%);bottom:-100px;left:-50px;"></div>
+        <div style="position:relative;">
+          <div class="tool-header">
+            <div class="tool-icon-box ti-a">📄</div>
+            <div>
+              <div class="tool-name">Lista de Feira em PDF</div>
+              <div class="tool-desc">Gere uma lista personalizada para baixar e levar na fair</div>
+            </div>
+          </div>
+          <div class="pdf-form">
+            <input class="pdf-input" id="pdf-nome" placeholder="Seu nome (opcional)" type="text"/>
+            <select class="pdf-select" id="pdf-objetivo">
+              <option value="">Selecione seu objetivo</option>
+              <option value="emagrecimento">Emagrecimento</option>
+              <option value="ganho_massa">Ganho de massa muscular</option>
+              <option value="manutencao">Manutenção do peso</option>
+              <option value="saude">Saúde e bem-estar</option>
+            </select>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <label style="font-size:.78rem;color:var(--t2);font-weight:600;">Incluir na lista:</label>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;" id="pdf-checkboxes">
+                <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--t2);cursor:pointer;"><input type="checkbox" id="cb-frutas" checked style="accent-color:var(--g);"> Frutas</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--t2);cursor:pointer;"><input type="checkbox" id="cb-verduras" checked style="accent-color:var(--g);"> Verduras</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--t2);cursor:pointer;"><input type="checkbox" id="cb-legumes" checked style="accent-color:var(--g);"> Legumes</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--t2);cursor:pointer;"><input type="checkbox" id="cb-dicas" checked style="accent-color:var(--g);"> Dicas de escolha</label>
+                <label style="display:flex;align-items:center;gap=6px;font-size:.8rem;color:var(--t2);cursor:pointer;"><input type="checkbox" id="cb-higiene" checked style="accent-color:var(--g);"> Higienização</label>
+              </div>
+            </div>
+            <button class="pdf-btn pdf-btn-primary" onclick="gerarPDFFeira()">⬇️ Baixar Lista da Feira (PDF)</button>
           </div>
         </div>
-        <div class="how-tags">
-          <span class="htag active">AI Engine</span>
-          <span class="htag">Metabolics</span>
-          <span class="htag active">Plans</span>
-          <span class="htag">Analytics</span>
-          <span class="htag active">Portal</span>
-          <span class="htag">Billing</span>
+      </div>
+
+      <!-- FERRAMENTA 4: GERADOR PDF GUIA VIAGEM -->
+      <div class="tool-card reveal d3">
+        <div class="tool-card-glow" style="background:radial-gradient(circle,rgba(255,79,123,0.06) 0%,transparent 70%);bottom:-100px;right:-50px;"></div>
+        <div style="position:relative;">
+          <div class="tool-header">
+            <div class="tool-icon-box ti-r">✈️</div>
+            <div>
+              <div class="tool-name">Guia de Viagem PDF</div>
+              <div class="tool-desc">Personalize e baixe seu guia completo para o destino</div>
+            </div>
+          </div>
+          <div class="pdf-form">
+            <input class="pdf-input" id="pdf-destino-nome" placeholder="Nome do viajante (opcional)" type="text"/>
+            <select class="pdf-select" id="pdf-destino-estado">
+              <option value="">Destino principal</option>
+              <option>Rio de Janeiro</option>
+              <option>São Paulo</option>
+              <option>Bahia</option>
+              <option>Minas Gerais</option>
+              <option>Santa Catarina</option>
+              <option>Rio Grande do Sul</option>
+              <option>Pernambuco</option>
+              <option>Ceará</option>
+              <option>Outro estado</option>
+            </select>
+            <select class="pdf-select" id="pdf-tipo-viagem">
+              <option value="">Tipo de viagem</option>
+              <option value="praia">Praia / litoral</option>
+              <option value="frio">Lugar frio / serrano</option>
+              <option value="cidade">City tour / urbano</option>
+              <option value="aviao">Viagem de avião</option>
+              <option value="carro">Viagem de carro</option>
+            </select>
+            <button class="pdf-btn pdf-btn-primary" onclick="gerarPDFViagem()">⬇️ Baixar Guia de Viagem (PDF)</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SOBRE
+     ══════════════════════════════════════════ -->
+<section id="sobre" class="sec-pad">
+  <div class="container">
+    <div class="hero-card reveal" style="text-align:center;">
+      <div class="hero-card-glow hcg-g"></div>
+      <div class="hero-card-glow hcg-v"></div>
+      <div style="position:relative;">
+        <div class="section-eyebrow">📚 Base científica</div>
+        <h2 class="section-h2" style="margin:0 auto 24px;text-align:center;">Nutrição com <em>evidência</em></h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;">
+          <div>
+            <div class="card-tag tag-g">Base</div>
+            <div style="font-size:.85rem;color:var(--t2);line-height:1.65;margin-top:8px;">Guia Alimentar Brasileiro (MS, 2014) · TBCA 7.2 — USP, 2023 · Diretrizes PAT</div>
+          </div>
+          <div>
+            <div class="card-tag tag-violet">Metodologia</div>
+            <div style="font-size:.85rem;color:var(--t2);line-height:1.65;margin-top:8px;">Considera densidade nutricional, saciedade, cultura, palatabilidade e sustentabilidade dos hábitos.</div>
+          </div>
+          <div>
+            <div class="card-tag tag-rose">Alerta</div>
+            <div style="font-size:.85rem;color:var(--t2);line-height:1.65;margin-top:8px;">Material educativo. Não substitui acompanhamento nutricional individualizado. Consulte um nutricionista.</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── FINAL CTA ── -->
-<section class="final-cta">
-  <div class="cta-glow-bg"></div>
-  <div class="cta-box reveal">
-    <h2>Start your universe today</h2>
-    <p>Join 2,400+ nutritionists delivering better outcomes with less work. Free for 30 days.</p>
-    <a href="#" class="btn-primary" style="display:inline-flex;">
-      Start your universe <span class="btn-arrow">→</span>
-    </a>
-    <div class="cta-note">
-      <span>No credit card · HIPAA compliant · Cancel anytime</span>
-    </div>
-  </div>
-</section>
-
-<!-- ── FOOTER ── -->
+<!-- ══════════════════════════════════════════
+     FOOTER
+     ══════════════════════════════════════════ -->
 <footer>
   <div class="footer-top">
     <div class="footer-brand">
-      <div class="footer-brand-name">Nutri<em>verse</em></div>
-      <div class="footer-brand-desc">The intelligence layer for modern clinical nutrition practice.</div>
+      <div class="footer-brand-name">Nutri<em>àFrente</em></div>
+      <div class="footer-brand-desc">Nutrição com consciência, ciência e liberdade. Um sistema completo para suas escolhas alimentares.</div>
     </div>
     <div class="footer-col">
-      <div class="footer-col-h">Product</div>
+      <div class="footer-col-h">Sacolão</div>
       <ul>
-        <li><a href="#">AI Engine</a></li>
-        <li><a href="#">Client Portal</a></li>
-        <li><a href="#">Metabolics</a></li>
-        <li><a href="#">Integrations</a></li>
-        <li><a href="#">Pricing</a></li>
+        <li><a href="#sacolao">Como escolher frutas</a></li>
+        <li><a href="#sacolao">Verduras e legumes</a></li>
+        <li><a href="#sacolao">Higienização</a></li>
+        <li><a href="#sacolao">Armazenamento</a></li>
       </ul>
     </div>
     <div class="footer-col">
-      <div class="footer-col-h">Resources</div>
+      <div class="footer-col-h">Viagem</div>
       <ul>
-        <li><a href="#">Documentation</a></li>
-        <li><a href="#">Research</a></li>
-        <li><a href="#">Blog</a></li>
-        <li><a href="#">Community</a></li>
-        <li><a href="#">Status</a></li>
+        <li><a href="#viagem">6 Sabotadores</a></li>
+        <li><a href="#viagem">Fome vs Vontade</a></li>
+        <li><a href="#viagem">Destinos BR</a></li>
+        <li><a href="#viagem">O que levar</a></li>
       </ul>
     </div>
     <div class="footer-col">
-      <div class="footer-col-h">Company</div>
+      <div class="footer-col-h">Ferramentas</div>
       <ul>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Careers</a></li>
-        <li><a href="#">Security</a></li>
-        <li><a href="#">Privacy</a></li>
-        <li><a href="#">Terms</a></li>
+        <li><a href="#ferramentas">Escala da fome</a></li>
+        <li><a href="#ferramentas">Construtor de prato</a></li>
+        <li><a href="#ferramentas">PDF Feira</a></li>
+        <li><a href="#ferramentas">PDF Viagem</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <div class="footer-copy">© 2025 Nutriverse, Inc. — Built for the future of nutrition.</div>
-    <div class="footer-socials">
-      <a href="#" class="soc-btn">𝕏</a>
-      <a href="#" class="soc-btn">in</a>
-      <a href="#" class="soc-btn">gh</a>
+    <div class="footer-copy">© 2025 Nutri à Frente · Material educativo · Não substitui acompanhamento profissional</div>
+    <div class="footer-links-bottom">
+      <a href="#">Instagram</a>
+      <a href="#">Privacidade</a>
+      <a href="#">Termos</a>
     </div>
   </div>
 </footer>
 
+<!-- ══════════════════════════════════════════
+     JAVASCRIPT
+     ══════════════════════════════════════════ -->
 <script>
+/* ── CURSOR ── */
+const cur = document.getElementById('cur');
+const curR = document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0,gx=0,gy=0;
+document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; cur.style.left=mx+'px'; cur.style.top=my+'px'; });
+function animRing() { rx+=(mx-rx)*.12; ry+=(my-ry)*.12; curR.style.left=rx+'px'; curR.style.top=ry+'px'; requestAnimationFrame(animRing); }
+animRing();
+
 /* ── MOUSE GLOW ── */
-const glow = document.getElementById('mouse-glow');
-const cursor = document.getElementById('cursor');
-const ring = document.getElementById('cursor-ring');
-
-let mx = window.innerWidth / 2, my = window.innerHeight / 2;
-let gx = mx, gy = my;
-let cx = mx, cy = my;
-let rx = mx, ry = my;
-let idle = null;
-
-document.addEventListener('mousemove', (e) => {
-  mx = e.clientX; my = e.clientY;
-  glow.style.opacity = '1';
-  clearTimeout(idle);
-  idle = setTimeout(() => { glow.style.opacity = '0'; }, 2500);
-});
-
-function lerp(a, b, t) { return a + (b - a) * t; }
-
-function animate() {
-  // Cursor dot — fast
-  cx = lerp(cx, mx, 0.35);
-  cy = lerp(cy, my, 0.35);
-  cursor.style.left = cx + 'px';
-  cursor.style.top = cy + 'px';
-
-  // Ring — slower
-  rx = lerp(rx, mx, 0.12);
-  ry = lerp(ry, my, 0.12);
-  ring.style.left = rx + 'px';
-  ring.style.top = ry + 'px';
-
-  // Glow — very smooth
-  gx = lerp(gx, mx, 0.06);
-  gy = lerp(gy, my, 0.06);
-  glow.style.background = `radial-gradient(
-    600px circle at ${gx}px ${gy}px,
-    rgba(0,255,255,0.07),
-    rgba(40,60,200,0.04) 35%,
-    rgba(100,60,200,0.02) 55%,
-    transparent 70%
-  )`;
-
-  requestAnimationFrame(animate);
-}
-animate();
+const glowEl = document.getElementById('mouse-glow');
+function animGlow() { gx+=(mx-gx)*.06; gy+=(my-gy)*.06; glowEl.style.background=`radial-gradient(600px circle at ${gx}px ${gy}px, rgba(0,255,135,0.055), rgba(0,100,255,0.02) 45%, transparent 65%)`; requestAnimationFrame(animGlow); }
+animGlow();
 
 /* ── SCROLL REVEAL ── */
-const revEls = document.querySelectorAll('.reveal');
-const obs = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
-}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-revEls.forEach(el => obs.observe(el));
+const obs = new IntersectionObserver(entries => { entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('vis'); }); }, {threshold:.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-/* ── PARALLAX ORBS ── */
-document.addEventListener('mousemove', (e) => {
-  const x = (e.clientX / window.innerWidth - 0.5) * 40;
-  const y = (e.clientY / window.innerHeight - 0.5) * 40;
-  document.querySelectorAll('.orb-hero-c, .orb-hero-p').forEach((orb, i) => {
-    const factor = i === 0 ? 0.4 : 0.7;
-    orb.style.transform = `translateX(calc(-50% + ${x * factor}px)) translateY(${y * factor}px)`;
+/* ── TOAST ── */
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+/* ════ DATA ════ */
+const frutas = [
+  {emoji:'🥑',nome:'Abacate',dica:'Firme mas não duro. Se apertar e ceder levemente, está no ponto certo.',cat:'toque',season:'boa'},
+  {emoji:'🥥',nome:'Coco',dica:'Chacoalhe — barulho de água = coco fresco. Para fruta seca, escolha o mais pesado.',cat:'peso',season:'boa'},
+  {emoji:'🍌',nome:'Banana',dica:'Amarela = pronta. Com pintinhas pretas = muito madura. Esverdeada = durará mais.',cat:'cor',season:'boa'},
+  {emoji:'🍊',nome:'Laranja',dica:'Casca brilhante, polida e lisa. Evite manchas marrons, partes mofadas e casca áspera.',cat:'cor',season:'boa'},
+  {emoji:'🍋',nome:'Limão',dica:'Casca lisa e brilhante, como a laranja. Disponível o ano todo — sempre seguro escolher.',cat:'cor',season:'boa'},
+  {emoji:'🍈',nome:'Tangerina',dica:'Perfumada, firme e pesada. Evite casca com marcas, defeitos ou pontos moles.',cat:'aroma',season:'ok'},
+  {emoji:'🥝',nome:'Kiwi',dica:'Aperte levemente — deve ceder e voltar. Nem dura demais, nem muito mole.',cat:'toque',season:'ok'},
+  {emoji:'🍎',nome:'Maçã',dica:'Casca brilhante, firme, sem rugas nem machucados. Quanto mais pesada, melhor.',cat:'cor',season:'boa'},
+  {emoji:'🍈',nome:'Mamão',dica:'Mais pesado é melhor. Casca lisa, sem rachaduras nem furos. Boa cor amarela-alaranjada.',cat:'peso',season:'boa'},
+  {emoji:'🍉',nome:'Melancia',dica:'Casca firme, cores uniformes. Pesada para o tamanho. Ao bater levemente, deve ressoar.',cat:'peso',season:'boa'},
+  {emoji:'🍓',nome:'Morango',dica:'Verifique o fundo da caixa — não pode haver unidades estragadas nem líquido acumulado.',cat:'cor',season:'ok'},
+  {emoji:'🍈',nome:'Melão',dica:'Bem amarelinho, casca sem rachaduras. Ao toque leve, cede um pouco quando maduro.',cat:'toque',season:'ok'},
+  {emoji:'🍐',nome:'Pera',dica:'Amarela = mais doce e ideal. Não deve estar muito firme — um leve ceder é bom sinal.',cat:'cor',season:'ok'},
+  {emoji:'🥭',nome:'Manga',dica:'Pressionar leve = cede um pouco. Escolha as mais perfumadas, sem manchas na casca.',cat:'aroma',season:'boa'},
+  {emoji:'🍈',nome:'Maracujá',dica:'Casca mais enrugada = mais madura e saborosa. Prefira os menores.',cat:'toque',season:'boa'},
+  {emoji:'🍑',nome:'Pêssego',dica:'Mais perfumado, casca sem rachaduras ou manchas verdes. Prefira as mais lisas.',cat:'aroma',season:'ok'},
+  {emoji:'🍈',nome:'Goiaba',dica:'Perfume característico e agradável. Nem muito mole nem muito dura.',cat:'aroma',season:'boa'},
+  {emoji:'🍇',nome:'Uva',dica:'Cabinhos verdes e firmes. Cachos que não soltam uvas ao balançar — frescura garantida.',cat:'cor',season:'ok'},
+  {emoji:'🍍',nome:'Abacaxi',dica:'Folhas do topo devem sair com leve puxão. Aroma adocicado na base = maduro.',cat:'aroma',season:'boa'},
+];
+
+const verduras = [
+  {emoji:'🥬',nome:'Alface',dica:'Folhas brilhantes, firmes e limpas, sem manchas, tamanho médio. Talo firme.'},
+  {emoji:'🥬',nome:'Acelga',dica:'Centro do maço fechado e esbranquiçado. Folhas verdes e firmes.'},
+  {emoji:'🌿',nome:'Agrião',dica:'Talos firmes e coloração verde-escura intensamente.'},
+  {emoji:'🌿',nome:'Almeirão',dica:'Folhas limpas, verdes e firmes. Sem amarelados ou danos.'},
+  {emoji:'🥬',nome:'Couve',dica:'Sem manchas amarelas ou escuras. Frescas, talos úmidos. Menores são mais macias.'},
+  {emoji:'🌿',nome:'Espinafre',dica:'Sem partes murchas, folhas amarelas ou talos escurecidos. Quanto mais verde, melhor.'},
+  {emoji:'🥦',nome:'Brócolis',dica:'Os mais verdinhos e com flores fechadas. Talos firmes e folhas frescas, sem manchas.'},
+  {emoji:'🌿',nome:'Coentro',dica:'Talos crocantes, folhas verdes, sem manchas amareladas.'},
+  {emoji:'🥬',nome:'Repolho',dica:'Mais pesado = melhor. Folhas sem manchas e bem fechadas.'},
+  {emoji:'🌿',nome:'Rúcula',dica:'Folhas firmes e verdes, sem pontos pretos nem manchas amarelas.'},
+  {emoji:'🌿',nome:'Salsa/Hortelã',dica:'Folhas bem verdinhas, sem manchas nem danos. Aroma fresco e forte.'},
+  {emoji:'🌿',nome:'Cebolinha',dica:'Verde, sem manchas amarelas, firme e sem amassados.'},
+  {emoji:'🌿',nome:'Alho-poró',dica:'Mais folhas verde-escuras com película brilhante = mais fresco.'},
+  {emoji:'🥦',nome:'Couve-flor',dica:'Flores fechadas, folhas verdes e tenras, sem amarelados.'},
+];
+
+const legumes = [
+  {emoji:'🧅',nome:'Cebola',dica:'Sem amassados ou outros danos. Casca íntegra.'},
+  {emoji:'🥔',nome:'Batata',dica:'Casca sem manchas marrons ou verdes. Inteirinhas. Vale também para batata-doce.'},
+  {emoji:'🫚',nome:'Beterraba',dica:'Casca firme, lisa, sem rachaduras. Tamanho médio, cor concentrada.'},
+  {emoji:'🥕',nome:'Cenoura',dica:'Sem mofo no corte. Cores vivas e firmes. Quanto mais laranja, melhor.'},
+  {emoji:'🍆',nome:'Berinjela',dica:'Casca brilhante, cor viva, sem danos visíveis.'},
+  {emoji:'🌽',nome:'Milho verde',dica:'Grãos brilhantes e inteiros. Palha verde viva, sem manchas amarelas.'},
+  {emoji:'🟫',nome:'Mandioca',dica:'Casca intacta, soltando facilmente. Sem manchas. Centro com cor uniforme e leve umidade.'},
+  {emoji:'🫑',nome:'Pimentão',dica:'Casca brilhante e firme. Prefira os menores.'},
+  {emoji:'🍅',nome:'Tomate',dica:'Firmes e brilhantes para salada. Mais maduros para molhos.'},
+  {emoji:'🥒',nome:'Pepino',dica:'Casca lisa e bem verde. Firme ao toque.'},
+  {emoji:'🎃',nome:'Abóbora',dica:'Casca livre de manchas, mofo ou sujeira.'},
+  {emoji:'🟢',nome:'Abobrinha',dica:'Menores (15-20cm) são melhores. Firmes, sem rachaduras, cor viva.'},
+  {emoji:'🌶️',nome:'Quiabo',dica:'Menores (até 10cm). Verdes e firmes.'},
+  {emoji:'🟢',nome:'Chuchu',dica:'Menores, mais pesados e firmes. Sem cortes, manchas ou depressões.'},
+];
+
+const kcalData = [
+  {emoji:'🍈',nome:'Melão',kcal:29,max:128},
+  {emoji:'🍓',nome:'Morango',kcal:30,max:128},
+  {emoji:'🍉',nome:'Melancia',kcal:33,max:128},
+  {emoji:'🍊',nome:'Laranja lima',kcal:46,max:128},
+  {emoji:'🍍',nome:'Abacaxi',kcal:48,max:128},
+  {emoji:'🍈',nome:'Tangerina',kcal:50,max:128},
+  {emoji:'🥝',nome:'Kiwi',kcal:51,max:128},
+  {emoji:'🍎',nome:'Maçã Gala',kcal:52,max:128},
+  {emoji:'🍐',nome:'Pera',kcal:53,max:128},
+  {emoji:'🍇',nome:'Uva Rubi',kcal:59,max:128},
+  {emoji:'🥭',nome:'Manga',kcal:60,max:128},
+  {emoji:'🍇',nome:'Uva Itália',kcal:62,max:128},
+  {emoji:'🍈',nome:'Maracujá',kcal:68,max:128},
+  {emoji:'🍌',nome:'Banana nanica',kcal:92,max:128},
+  {emoji:'🥑',nome:'Abacate',kcal:96,max:128},
+  {emoji:'🍌',nome:'Banana prata',kcal:98,max:128},
+  {emoji:'🍌',nome:'Banana da terra',kcal:128,max:128},
+];
+
+const destinos = [
+  {emoji:'🌴',nome:'Rio de Janeiro',snacks:['1 biscoito Globo + matte leão zero']},
+  {emoji:'☕',nome:'Minas Gerais',snacks:['2 pães de queijo + café sem açúcar (200ml)']},
+  {emoji:'🌊',nome:'Bahia',snacks:['1 acarajé médio (recheio simples)']},
+  {emoji:'🏙️',nome:'São Paulo',snacks:['1 pão na chapa + café sem açúcar (200ml)']},
+  {emoji:'🌲',nome:'Paraná',snacks:['1 pão de queijo médio + café sem açúcar']},
+  {emoji:'🏔️',nome:'Santa Catarina',snacks:['1 fatia fina de cuca + chimarrão sem açúcar']},
+  {emoji:'🧉',nome:'Rio Grande do Sul',snacks:['Chimarrão sem açúcar + biscoito de polvilho']},
+  {emoji:'🐟',nome:'Espírito Santo',snacks:['1 pedaço pequeno de torta capixaba com vegetais e frutos do mar']},
+  {emoji:'🌅',nome:'Pernambuco',snacks:['1 tapioca simples (queijo/ovo) + caldo de cana sem açúcar']},
+  {emoji:'☀️',nome:'Ceará',snacks:['1 porção de cuscuz nordestino com ovo']},
+  {emoji:'🏜️',nome:'Rio Grande do Norte',snacks:['1 tapioca média + café sem açúcar']},
+  {emoji:'🌿',nome:'Maranhão',snacks:['1 porção pequena de cuxá com peixe grelhado']},
+  {emoji:'🌊',nome:'Pará',snacks:['1 tapioca simples com banana ou coco']},
+  {emoji:'🌳',nome:'Amazonas',snacks:['1 x-caboquinho leve (pão, banana e queijo coalho)']},
+  {emoji:'🌾',nome:'Goiás',snacks:['1 pão de queijo goiano + café']},
+  {emoji:'🐊',nome:'Mato Grosso do Sul',snacks:['1 chipa + tereré sem açúcar']},
+  {emoji:'🌻',nome:'Paraíba',snacks:['1 tapioca de coco simples média']},
+  {emoji:'🏝️',nome:'Alagoas',snacks:['2 unidades de bolo de goma']},
+];
+
+const packItems = [
+  {emoji:'🍫',label:'2 Barrinhas',detail:'Proteicas - +13g proteína'},
+  {emoji:'🍎',label:'1 Fruta',detail:'Maçã, banana ou pera'},
+  {emoji:'🌰',label:'Mix castanhas',detail:'Porção de 30g'},
+  {emoji:'💧',label:'Garrafa de água',detail:'Pelo menos 500ml'},
+  {emoji:'💪',label:'Whey sachê',detail:'Para emergências proteicas'},
+  {emoji:'🥜',label:'Pasta amendoim',detail:'Sachê individual'},
+  {emoji:'🥪',label:'Sanduíche leve',detail:'Frango ou ovo + salada'},
+  {emoji:'🧴',label:'Álcool em gel',detail:'Higiene antes de comer'},
+  {emoji:'🧻',label:'Lenços umedecidos',detail:'Praticidade na viagem'},
+];
+
+const hungerData = {
+  1:{label:'Faminto(a) como um leão!',desc:'Barriga doendo, irritação, dificuldade de concentrar. Coma agora, mas devagar.',color:'#dc2626'},
+  2:{label:'Bastante fome',desc:'Fraqueza e sem energia. Hora de comer — mas sem pressa extrema.',color:'#ef4444'},
+  3:{label:'Com fome — estômago fazendo barulho',desc:'✅ Bom momento para começar a buscar sua refeição!',color:'#f97316'},
+  4:{label:'Começando a sentir fome',desc:'✅ Ótimo para fazer uma refeição planejada antes de chegar à 3.',color:'#fbbf24'},
+  5:{label:'Zona neutra',desc:'Nem com fome nem satisfeito. Não coma agora a não ser que seja sua refeição programada.',color:'#a3e635'},
+  6:{label:'Um pouco satisfeito(a)',desc:'🛑 Comi mais do que precisava. Melhor parar por aqui.',color:'#4ade80'},
+  7:{label:'Confortavelmente satisfeito(a)',desc:'✅ 🛑 Ponto ideal para parar. Seu corpo está saciado sem exageros.',color:'#4ade80'},
+  8:{label:'Cheio(a) e estufado(a)',desc:'Comi mais do que o necessário. Sensação de peso e inchaço.',color:'#fb923c'},
+  9:{label:'Muito cheio(a)',desc:'Dores no estômago. Precisaria afrouxar a roupa.',color:'#f97316'},
+  10:{label:'Incomodado(a)',desc:'Dores e mal-estar. Evite chegar aqui — ouça seu corpo antes.',color:'#dc2626'},
+};
+
+/* ── RENDER FUNÇÕES ── */
+function renderFrutas(filter='all') {
+  const grid = document.getElementById('fruta-grid');
+  const filtered = filter === 'all' ? frutas : frutas.filter(f => f.cat === filter);
+  grid.innerHTML = filtered.map(f => `
+    <div class="product-card">
+      <span class="prod-emoji">${f.emoji}</span>
+      <div class="prod-name">${f.nome}</div>
+      <div class="prod-tip">${f.dica}</div>
+      <span class="prod-season ${f.season === 'boa' ? 'season-boa' : 'season-ok'}">${f.season === 'boa' ? '✓ Fácil de encontrar' : '↻ Época específica'}</span>
+    </div>
+  `).join('');
+}
+
+function filterFrutas(cat, btn) {
+  document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  renderFrutas(cat);
+}
+
+function renderKcal() {
+  const container = document.getElementById('kcal-bars');
+  container.innerHTML = kcalData.map(f => `
+    <div class="kcal-row">
+      <span class="kcal-emoji">${f.emoji}</span>
+      <span class="kcal-name">${f.nome}</span>
+      <div class="kcal-bar-bg"><div class="kcal-bar-fill" style="width:${(f.kcal/128)*100}%"></div></div>
+      <span class="kcal-val">${f.kcal} kcal</span>
+    </div>
+  `).join('');
+}
+
+function renderVL(type) {
+  const data = type === 'verduras' ? verduras : legumes;
+  const container = document.getElementById('vl-' + type);
+  container.innerHTML = data.map(v => `
+    <div class="vl-item">
+      <span class="vl-icon">${v.emoji}</span>
+      <div class="vl-name">${v.nome}</div>
+      <div class="vl-tip">${v.dica}</div>
+    </div>
+  `).join('');
+}
+
+function showVL(type, btn) {
+  document.querySelectorAll('.vl-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.vl-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('vl-'+type).classList.add('active');
+}
+
+function renderDestinos() {
+  const acc = document.getElementById('destino-accordion');
+  acc.innerHTML = destinos.map((d,i) => `
+    <div class="destino-item" id="dest-${i}">
+      <div class="destino-header" onclick="toggleDestino(${i})">
+        <span class="destino-flag">${d.emoji}</span>
+        <span class="destino-name">${d.nome}</span>
+        <span class="destino-arrow">▾</span>
+      </div>
+      <div class="destino-body">
+        <div class="destino-snacks">
+          ${d.snacks.map(s => `<div class="destino-snack">${s}</div>`).join('')}
+          <div class="destino-snack">💧 <em>Sempre:</em> água + fruta + castanhas na bolsa</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleDestino(i) {
+  const item = document.getElementById('dest-' + i);
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.destino-item').forEach(d => d.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+function renderPack() {
+  const grid = document.getElementById('pack-grid');
+  grid.innerHTML = packItems.map((p,i) => `
+    <div class="pack-item" onclick="togglePack(this,${i})" id="pack-${i}">
+      <div class="pack-check" id="pcheck-${i}"></div>
+      <span class="pack-icon">${p.emoji}</span>
+      <div class="pack-label">${p.label}</div>
+      <div class="pack-detail">${p.detail}</div>
+    </div>
+  `).join('');
+}
+
+function togglePack(el, i) {
+  el.classList.toggle('checked');
+  const ch = document.getElementById('pcheck-'+i);
+  ch.textContent = el.classList.contains('checked') ? '✓' : '';
+  const total = document.querySelectorAll('.pack-item.checked').length;
+  if(total === packItems.length) toast('✅ Bolsa completa! Boa viagem!');
+}
+
+function renderHunger() {
+  const scale = document.getElementById('hunger-scale');
+  const colors = ['#dc2626','#ef4444','#f97316','#fbbf24','#a3e635','#4ade80','#4ade80','#fb923c','#f97316','#dc2626'];
+  scale.innerHTML = Array.from({length:10},(_,i)=>`
+    <button class="hunger-btn" style="--hc:${colors[i]}" onclick="showHunger(${i+1},this)">${i+1}</button>
+  `).join('');
+}
+
+function showHunger(n, btn) {
+  document.querySelectorAll('.hunger-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const d = hungerData[n];
+  const colors = {1:'#dc2626',2:'#ef4444',3:'#f97316',4:'#fbbf24',5:'#a3e635',6:'#4ade80',7:'#4ade80',8:'#fb923c',9:'#f97316',10:'#dc2626'};
+  btn.style.background = d.color; btn.style.borderColor = d.color;
+  const res = document.getElementById('hunger-result');
+  res.innerHTML = `<strong style="color:${d.color};">${n} — ${d.label}</strong><br><span style="font-size:.8rem;color:var(--t2);margin-top:4px;display:block;">${d.desc}</span>`;
+  res.classList.add('show');
+}
+
+/* ── PRATO BUILDER ── */
+const pratoGroups = [
+  {label:'Proteína',color:'#ff4f7b',key:'p',pct:25},
+  {label:'Carboidrato',color:'#ffb800',key:'c',pct:25},
+  {label:'Vegetais',color:'#00ff87',key:'v',pct:50},
+];
+let pratoValues = {p:25,c:25,v:50};
+
+function renderPratoBuilder() {
+  const builder = document.getElementById('prato-builder');
+  builder.innerHTML = pratoGroups.map(g => `
+    <div class="prato-row">
+      <span class="prato-label" style="color:${g.color};">${g.label}</span>
+      <div class="prato-bar-bg" onclick="cyclePrato('${g.key}','${g.color}')">
+        <div class="prato-bar-fill" id="pbar-${g.key}" style="width:${pratoValues[g.key]}%;background:${g.color};"></div>
+      </div>
+      <span class="prato-pct" id="ppct-${g.key}" style="color:${g.color};">${pratoValues[g.key]}%</span>
+    </div>
+  `).join('');
+}
+
+function cyclePrato(key, color) {
+  const steps = [25,33,50,10,20];
+  const cur = pratoValues[key];
+  const idx = steps.findIndex(s=>s===cur);
+  pratoValues[key] = steps[(idx+1)%steps.length];
+  document.getElementById('pbar-'+key).style.width = pratoValues[key]+'%';
+  document.getElementById('ppct-'+key).textContent = pratoValues[key]+'%';
+  const total = Object.values(pratoValues).reduce((a,b)=>a+b,0);
+  const fb = document.getElementById('prato-feedback');
+  if(Math.abs(total-100) < 5) {
+    fb.innerHTML = `✅ <span style="color:var(--g);">Prato equilibrado! Proteína ${pratoValues.p}% · Carbo ${pratoValues.c}% · Vegetais ${pratoValues.v}%</span>`;
+  } else {
+    fb.innerHTML = `<span style="color:var(--amber);">Total: ${total}% — Ideal é 100%. Ajuste as barras clicando.</span>`;
+  }
+}
+
+/* ── PDF GERADORES ── */
+function gerarPDFFeira() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  const nome = document.getElementById('pdf-nome').value || 'Sua lista';
+  const objetivo = document.getElementById('pdf-objetivo').value;
+  const cbFrutas = document.getElementById('cb-frutas').checked;
+  const cbVerduras = document.getElementById('cb-verduras').checked;
+  const cbLegumes = document.getElementById('cb-legumes').checked;
+  const cbDicas = document.getElementById('cb-dicas').checked;
+  const cbHigiene = document.getElementById('cb-higiene').checked;
+
+  // Header
+  doc.setFillColor(3,6,8); doc.rect(0,0,210,297,'F');
+  doc.setFillColor(0,255,135); doc.rect(0,0,210,22,'F');
+  doc.setTextColor(3,6,8); doc.setFont('helvetica','bold'); doc.setFontSize(16);
+  doc.text('NUTRI À FRENTE — Lista da Feira', 14, 14);
+  doc.setFontSize(10); doc.text(nome + ' · ' + new Date().toLocaleDateString('pt-BR'), 14, 19);
+
+  let y = 30;
+  doc.setTextColor(238,244,255);
+
+  if(cbFrutas) {
+    doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(0,255,135);
+    doc.text('FRUTAS', 14, y); y += 6;
+    doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(200,220,240);
+    frutas.forEach(f => {
+      if(y > 275) { doc.addPage(); y=15; }
+      doc.text(`□  ${f.nome}`, 14, y);
+      if(cbDicas) { doc.setTextColor(120,140,168); doc.setFontSize(8); doc.text(f.dica.substring(0,80)+'...', 40, y); doc.setFontSize(9); doc.setTextColor(200,220,240); }
+      y += cbDicas ? 8 : 6;
+    });
+    y += 6;
+  }
+
+  if(cbVerduras) {
+    if(y > 250) { doc.addPage(); y=15; }
+    doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(0,200,255);
+    doc.text('VERDURAS', 14, y); y += 6;
+    doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(200,220,240);
+    verduras.forEach(v => {
+      if(y > 275) { doc.addPage(); y=15; }
+      doc.text(`□  ${v.nome}`, 14, y);
+      if(cbDicas) { doc.setTextColor(120,140,168); doc.setFontSize(8); doc.text(v.dica.substring(0,80), 40, y); doc.setFontSize(9); doc.setTextColor(200,220,240); }
+      y += cbDicas ? 8 : 6;
+    });
+    y += 6;
+  }
+
+  if(cbLegumes) {
+    if(y > 250) { doc.addPage(); y=15; }
+    doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(255,184,0);
+    doc.text('LEGUMES', 14, y); y += 6;
+    doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(200,220,240);
+    legumes.forEach(l => {
+      if(y > 275) { doc.addPage(); y=15; }
+      doc.text(`□  ${l.nome}`, 14, y);
+      if(cbDicas) { doc.setTextColor(120,140,168); doc.setFontSize(8); doc.text(l.dica.substring(0,80), 40, y); doc.setFontSize(9); doc.setTextColor(200,220,240); }
+      y += cbDicas ? 8 : 6;
+    });
+    y += 6;
+  }
+
+  if(cbHigiene) {
+    if(y > 240) { doc.addPage(); y=15; }
+    doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(0,255,135);
+    doc.text('COMO HIGIENIZAR', 14, y); y += 8;
+    doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(200,220,240);
+    const higieneSteps = [
+      '1. Deixe de molho: 1L água + 1 col. sopa hipoclorito OU 1 col. café água sanitária',
+      '2. Aguarde mínimo 15 minutos em repouso',
+      '3. Enxágue sob água corrente abundante (casca incluída)',
+      '4. Seque muito bem — folhas úmidas murcham rápido',
+      '5. Armazene em potes com papel-toalha entre as camadas',
+    ];
+    higieneSteps.forEach(s => { doc.text(s, 14, y); y += 7; });
+  }
+
+  // Footer
+  doc.setFontSize(7); doc.setTextColor(60,80,100);
+  doc.text('© Nutri à Frente · Material educativo · Não substitui acompanhamento nutricional individualizado', 14, 290);
+
+  doc.save(`lista-feira-nutriafrente-${nome.replace(/\s/g,'_')}.pdf`);
+  toast('📄 PDF da feira gerado! Verifique seus downloads.');
+}
+
+function gerarPDFViagem() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  const nome = document.getElementById('pdf-destino-nome').value || 'Viajante';
+  const estado = document.getElementById('pdf-destino-estado').value || 'Brasil';
+  const tipo = document.getElementById('pdf-tipo-viagem').value || 'geral';
+
+  doc.setFillColor(3,6,8); doc.rect(0,0,210,297,'F');
+  doc.setFillColor(155,109,255); doc.rect(0,0,210,22,'F');
+  doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(15);
+  doc.text('NUTRI À FRENTE — Guia de Viagem', 14, 14);
+  doc.setFontSize(10); doc.text(`${nome} → ${estado} · ${new Date().toLocaleDateString('pt-BR')}`, 14, 19);
+
+  let y = 30;
+
+  // Sabotadores
+  doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(155,109,255);
+  doc.text('OS 6 SABOTADORES DA VIAGEM', 14, y); y += 8;
+  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(200,220,240);
+  ['Falta de planejamento','Mentalidade de pausa da dieta','Fome emocional pela mudança de rotina',
+   'Depender 100% da comida dos outros','Transformar cada refeição em merecimento','Pouca proteína e água'].forEach((s,i)=>{
+    doc.text(`${i+1}. ${s}`, 14, y); y += 7;
   });
-});
+  y += 4;
+
+  // O que levar na bolsa
+  doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(0,255,135);
+  doc.text('CHECKLIST DA BOLSA', 14, y); y += 8;
+  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(200,220,240);
+  packItems.forEach(p => { doc.text(`□  ${p.label} — ${p.detail}`, 14, y); y += 7; });
+  y += 4;
+
+  // Regra da Mão
+  doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(0,200,255);
+  doc.text('REGRA DA MÃO — Monte seu prato', 14, y); y += 8;
+  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(200,220,240);
+  [{h:'1 Palma = Proteína',d:'Carne, frango, peixe ou ovos'},{h:'1 Punho = Carboidrato',d:'Arroz, massa simples, purê'},
+   {h:'2 Conchas = Vegetais',d:'Crus e cozidos (metade do prato)'},{h:'1 Polegar = Gordura',d:'Azeite, abacate, castanhas'}]
+  .forEach(r => { doc.text(`• ${r.h}: ${r.d}`, 14, y); y += 7; });
+  y += 4;
+
+  // Lanches locais do destino
+  const destinoData = destinos.find(d => d.nome === estado);
+  if(destinoData) {
+    doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(255,184,0);
+    doc.text(`LANCHES EM ${estado.toUpperCase()}`, 14, y); y += 8;
+    doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(200,220,240);
+    destinoData.snacks.forEach(s => { doc.text(`✓  ${s}`, 14, y); y += 7; });
+    y += 4;
+  }
+
+  // Café do hotel
+  doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(0,255,135);
+  doc.text('NO CAFÉ DO HOTEL', 14, y); y += 8;
+  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(200,220,240);
+  ['✓ Ovos mexidos com pão simples','✓ Salada de frutas (sem açúcar)','✓ Iogurte natural + frutas','✓ Tapioca com frango','× Evite: bolos, pães doces e sucos industriais'].forEach(s=>{ doc.text(s, 14, y); y+=7; });
+
+  doc.setFontSize(7); doc.setTextColor(60,80,100);
+  doc.text('© Nutri à Frente · Material educativo · Não substitui acompanhamento nutricional individualizado', 14, 290);
+
+  doc.save(`guia-viagem-nutriafrente-${nome.replace(/\s/g,'_')}.pdf`);
+  toast('✈️ Guia de viagem gerado! Boa viagem!');
+}
+
+/* ── INIT ── */
+renderFrutas();
+renderKcal();
+renderVL('verduras');
+renderVL('legumes');
+renderDestinos();
+renderPack();
+renderHunger();
+renderPratoBuilder();
+
+// Animate kcal bars on scroll
+const kcalObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      e.target.querySelectorAll('.kcal-bar-fill').forEach(b => {
+        const w = b.style.width; b.style.width='0';
+        setTimeout(()=>{ b.style.width=w; }, 150);
+      });
+    }
+  });
+},{threshold:.3});
+const kcalEl = document.getElementById('kcal-bars');
+if(kcalEl) kcalObs.observe(kcalEl);
+
 </script>
 </body>
 </html>
